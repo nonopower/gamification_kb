@@ -12,6 +12,7 @@ module.exports = {
         city: 'Taipei',
         createdAt: new Date(),
         updatedAt: new Date(),
+        imageContent: '01.png',
       },
       {
         name: 'Jon Doe',
@@ -21,6 +22,7 @@ module.exports = {
         city: 'Taipei',
         createdAt: new Date(),
         updatedAt: new Date(),
+        imageContent: '01.png',
       },
     ],
     {},

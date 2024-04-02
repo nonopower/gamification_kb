@@ -27,6 +27,11 @@ module.exports = (sequelize, DataTypes) => {
         city: {
           type: DataTypes.STRING,
           allowNull: false
+        },
+        imageContent: {
+          type: DataTypes.STRING,
+          defaultValue: 'default_image.png', // 默认值
+          allowNull: true
         }
     }, {timestamps: true}, );
 

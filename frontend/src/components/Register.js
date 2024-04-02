@@ -41,7 +41,8 @@ export const Register = () => {
             password: data.password,
             passwordConf: data.passwordConf,
             school: data.school,
-            city: data.city
+            city: data.city,
+            imageContent: "01.png"
         };
         axios
             .post(url.backendHost + config[0].registerUrl, userData)
@@ -53,7 +54,8 @@ export const Register = () => {
                     password: "",
                     passwordConf: "",
                     school: "",
-                    city: ""
+                    city: "",
+                    imageContent: ""
                 })
                 // console.log(response.status, response.data);
             })
