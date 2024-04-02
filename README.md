@@ -1,4 +1,4 @@
-﻿# Idea-Centered-Inquiry
+﻿# gamification_kb
  ### How to run this server
   - backend: `docker-compose up backend`
   - frontend: `docker-compose up frontend`
