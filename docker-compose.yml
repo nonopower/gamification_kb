@@ -4,7 +4,7 @@ services:
     build:
       context: backend
     environment:
-      DB_TABLENAME: Idea-centered-inquiry #<DB_TABLENAME>
+      DB_TABLENAME: Gamification_kb #<DB_TABLENAME>
       DB_USERNAME: wulab #<USERNAME>
       DB_USERPSW: ytwu35415 #<USERPSW>
       DB_HOST: db
@@ -21,7 +21,7 @@ services:
     image: postgres:13.2-alpine
     restart: always
     environment:
-      POSTGRES_DB: Idea-centered-inquiry #<DB_TABLENAME> 
+      POSTGRES_DB: Gamification_kb #<DB_TABLENAME> 
       POSTGRES_USER: wulab #<USERNAME> 
       POSTGRES_PASSWORD: ytwu35415 #<USERPSW> 
       PGDATA: /var/lib/postgresql/data
