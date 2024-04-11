@@ -1,0 +1,32 @@
+.login-container {
+   width: 100%;
+   height: 100%;
+
+   .info-container {
+      width: 50%;
+      height: 100%;
+      background-color: #00000095;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      .title {
+         width: 100%;
+         height: auto;
+      }
+
+      .play {
+         display: inline-block;
+         margin: 20px auto;
+         width: 35%;
+         position: relative;
+
+         img {
+            position: absolute;
+            width: 100%;
+            height: auto;
+         }
+      }
+   }
+}
