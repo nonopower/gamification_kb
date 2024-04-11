@@ -1,0 +1,112 @@
+.user-container {
+   width: 100%;
+   height: 100%;
+   background-color: #00000095;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+   .info-container {
+      width: 95%;
+      height: 95%;
+      background-color: #00000095;
+      border: 10px solid #ffd12a;
+      border-radius: 15px;
+      display: flex;
+      padding: 30px;
+
+      h3,
+      span {
+         color: #fff;
+         font-size: 32px;
+         line-height: normal;
+         padding-bottom: 15px;
+      }
+
+      .left-container {
+         display: flex;
+         flex-direction: column;
+         justify-content: space-around;
+         width: 35%;
+         border-right: 1px solid #ccc;
+         padding-right: 5%;
+         text-align: center;
+
+         span {
+            color: #ffd12a;
+         }
+
+         h4 {
+            color: #fff;
+            font-size: 25px;
+         }
+
+         a {
+            color: #fff;
+            width: 50%;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: flex-end;
+            line-height: 22px;
+
+            img {
+               height: 50px;
+               margin-right: 10px;
+            }
+         }
+
+         .bar-container {
+            color: #fff;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .bar-outer {
+               margin-left: 10px;
+               width: 100%;
+               height: 15px;
+               border-radius: 10px;
+               background-color: #483e3b;
+               .bar {
+                  width: 50%;
+                  height: 100%;
+                  border-radius: 10px;
+                  background-color: #ffd12a;
+               }
+            }
+         }
+
+         .avatar {
+            height: 50%;
+         }
+      }
+      .right-container {
+         width: 80%;
+         display: flex;
+         flex-direction: column;
+         padding-left: 5%;
+         overflow-y: auto;
+
+         h3 {
+            text-align: left;
+         }
+
+         .badge-area {
+            display: flex;
+            flex-wrap: wrap;
+            .badge-item {
+               width: 50px;
+               margin: 15px;
+            }
+         }
+
+         .skill-container {
+            width: 100%;
+            height: 100%;
+         }
+      }
+   }
+}
