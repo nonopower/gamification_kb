@@ -7,6 +7,7 @@ const readXlsxFile = require("read-excel-file/node");
 const User = db.User;
 const Profile = db.Profile;
 const UserProfile = db.UserProfile;
+const Radar = db.Radar;
 
 // signing a user up
 // hashing users password before its saved to the database with bcrypt
@@ -30,7 +31,17 @@ exports.signup = async (req, res) => {
 
     //saving the user
     const user = await User.create(data);
- 
+
+    const initRadar = {
+      idea : 0,
+      reply : 0,
+      ask : 0,
+      record : 0,
+      experiment : 0,
+      info : 0,
+      UserId : user.id
+    };
+    const radar = await Radar.create(initRadar);
     //if user details is captured
     //generate token with the user's id and the secretKey in the env file
     // set cookie with the token generated

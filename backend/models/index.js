@@ -40,11 +40,16 @@ db.ActivityPartSubPart = require("./activityPartSubPart.model.js")(sequelize, Da
 db.Node = require("./node.model.js")(sequelize, DataTypes);
 db.GroupNode = require("./groupNode.model.js")(sequelize, DataTypes);
 db.Edge = require("./edge.model.js")(sequelize, DataTypes);
+db.Radar = require("./radar.model.js")(sequelize, DataTypes);
 
 db.User.belongsToMany(db.Profile, { through: db.UserProfile });
 db.Profile.belongsToMany(db.User, { through: db.UserProfile });
 db.UserProfile.belongsTo(db.User);
 db.UserProfile.belongsTo(db.Profile);
+
+db.Radar.belongsTo(db.User);
+db.User.hasOne(db.Radar);
+
 db.User.hasMany(db.UserProfile);
 db.Profile.hasMany(db.Profile);
 
