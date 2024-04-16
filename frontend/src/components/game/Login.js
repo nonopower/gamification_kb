@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './login.scss'
 import Stack from '@mui/material/Stack'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -15,6 +15,28 @@ import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
    const navigate = useNavigate()
+   const [role, setRole] = useState('student')
+   const [email, setEmail] = useState('')
+   const [password, setPassword] = useState('')
+
+   const handleRoleChange = (event) => {
+      setRole(event.target.value)
+   }
+
+   const handleSubmit = (e) => {
+      e.preventDefault()
+      console.log(email, password, role)
+      if (role === 'teacher') navigate('/')
+   }
+   const handleEmailChange = (e) => {
+      e.preventDefault()
+      setEmail(e.target.value)
+   }
+   const handlePasswordChange = (e) => {
+      e.preventDefault()
+      setPassword(e.target.value)
+   }
+
    return (
       <>
          <div className="login-container">
@@ -37,6 +59,8 @@ export default function Login() {
                      id="input-with-icon-textfield"
                      variant="outlined"
                      sx={{ width: '100%', backgroundColor: '#ffffffde' }}
+                     value={email}
+                     onChange={handleEmailChange}
                      InputProps={{
                         startAdornment: (
                            <InputAdornment position="start">
@@ -53,6 +77,8 @@ export default function Login() {
                      id="input-with-icon-textfield"
                      variant="outlined"
                      sx={{ width: '100%', backgroundColor: '#ffffffde' }}
+                     value={password}
+                     onChange={handlePasswordChange}
                      InputProps={{
                         startAdornment: (
                            <InputAdornment position="start">
@@ -73,9 +99,11 @@ export default function Login() {
                         aria-labelledby="demo-radio-buttons-group-label"
                         defaultValue="female"
                         name="radio-buttons-group"
+                        value={role}
+                        onChange={handleRoleChange}
                      >
                         <FormControlLabel
-                           value="female"
+                           value="teacher"
                            control={
                               <Radio
                                  sx={{
@@ -90,7 +118,7 @@ export default function Login() {
                            label="教師"
                         />
                         <FormControlLabel
-                           value="male"
+                           value="student"
                            control={
                               <Radio
                                  sx={{
@@ -113,7 +141,7 @@ export default function Login() {
                      width: '100%',
                   }}
                >
-                  <a href="/" className="play">
+                  <a href="/" className="play" onClick={handleSubmit}>
                      <img src="/game/play.png" alt="" />
                      <img src="/game/play2.png" alt="" />
                   </a>
@@ -134,7 +162,7 @@ export default function Login() {
                      variant="text"
                      sx={{ color: '#ffd12a' }}
                      onClick={() => {
-                        navigate('/create-role')
+                        navigate('/game/create-role')
                      }}
                   >
                      註冊

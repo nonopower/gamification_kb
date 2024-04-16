@@ -10,8 +10,8 @@ import PersonIcon from '@mui/icons-material/Person'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import { useNavigate } from 'react-router-dom'
 import config from '../../config.json'
-import axios from 'axios'
 import url from '../../url.json'
+import axios from 'axios'
 
 export default function CreateRole() {
    const navigate = useNavigate()
@@ -53,6 +53,17 @@ export default function CreateRole() {
          .catch((error) => {})
    }
 
+   const handleChange = (e) => {
+      e.preventDefault()
+
+      const value = e.target.value
+
+      setData({
+         ...data,
+         [e.target.name]: value,
+      })
+   }
+
    return (
       <>
          <div className="create-role-container">
@@ -76,7 +87,8 @@ export default function CreateRole() {
                            margin="normal"
                            variant="outlined"
                            value={data.name}
-                           name="user"
+                           name="name"
+                           onChange={handleChange}
                            sx={{ width: '100%', backgroundColor: '#ffffffde' }}
                            InputProps={{
                               startAdornment: (
@@ -94,6 +106,7 @@ export default function CreateRole() {
                            variant="outlined"
                            value={data.email}
                            name="email"
+                           onChange={handleChange}
                            sx={{ width: '100%', backgroundColor: '#ffffffde' }}
                            InputProps={{
                               startAdornment: (
@@ -112,6 +125,7 @@ export default function CreateRole() {
                            variant="outlined"
                            sx={{ width: '100%', backgroundColor: '#ffffffde' }}
                            name="password"
+                           onChange={handleChange}
                            InputProps={{
                               startAdornment: (
                                  <InputAdornment position="start">
@@ -127,6 +141,7 @@ export default function CreateRole() {
                            value={data.school}
                            size="large"
                            variant="outlined"
+                           onChange={handleChange}
                            sx={{ width: '100%', backgroundColor: '#ffffffde' }}
                            name="school"
                            InputProps={{
