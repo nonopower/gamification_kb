@@ -171,7 +171,7 @@ export default function CreateRole() {
                         variant="text"
                         sx={{ color: '#ffd12a' }}
                         onClick={() => {
-                           navigate('/login')
+                           navigate('/game/login')
                         }}
                      >
                         登入

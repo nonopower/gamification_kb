@@ -14,6 +14,7 @@ ChartJS.register(RadialLinearScale, PointElement, LineElement, Tooltip)
 
 export default function User() {
    const [chartData, setChartData] = useState({ labels: [], datasets: [] })
+   const name = localStorage.getItem('name')
    const navigate = useNavigate()
 
    const options = {
@@ -59,7 +60,7 @@ export default function User() {
 
    const back = (e) => {
       e.preventDefault()
-      navigate('/game/battle-lobby')
+      navigate(-1)
    }
 
    return (
@@ -73,7 +74,8 @@ export default function User() {
                   </a>
                   <div className="text-container">
                      <h3 className="username">
-                        <span>冒險家</span> nono琪
+                        <span>冒險家</span>
+                        {name}
                      </h3>
                      <h4>（排行榜第25名）</h4>
                   </div>

@@ -2,6 +2,7 @@
    width: 100%;
    height: 100%;
    display: flex;
+   position: relative;
 
    .side-menu {
       width: 10%;
@@ -13,7 +14,7 @@
          height: 100%;
          display: flex;
          flex-direction: column;
-         background-color: #00000060;
+         background-color: #000000b7;
          border-radius: 15px;
 
          .menu-item {
@@ -109,63 +110,55 @@
 
    .battle-right-info {
       width: 25%;
-      height: 100%;
+      height: 35%;
       display: flex;
       flex-direction: column;
-      position: relative;
+      position: absolute;
+      background-color: #000000b7;
+      border-radius: 15px;
+      text-align: center;
+      padding: 20px;
+      right: 20px;
+      bottom: 20px;
 
-      .bottom {
-         width: 100%;
-         height: 40%;
-         padding: 15px;
-         position: absolute;
-         bottom: 0;
+      img {
+         height: 85%;
+      }
 
-         img {
-            height: 85%;
+      .bar-container {
+         color: #fff;
+         width: 80%;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         position: relative;
+         left: 50%;
+         transform: translateX(-50%);
+
+         h4 {
+            font-size: 24px;
+            margin-right: 15px;
          }
 
-         .bar-container {
-            color: #fff;
-            width: 80%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            left: 50%;
-            transform: translateX(-50%);
+         .bar-outer {
+            margin-left: 10px;
+            width: 100%;
+            height: 15px;
+            border-radius: 10px;
+            background-color: #333333;
 
-            h4 {
-               font-size: 24px;
-               margin-right: 15px;
-            }
-
-            .bar-outer {
-               margin-left: 10px;
-               width: 100%;
-               height: 15px;
+            .bar {
+               width: 50%;
+               height: 100%;
                border-radius: 10px;
-               background-color: #333333;
-
-               .bar {
-                  width: 50%;
-                  height: 100%;
-                  border-radius: 10px;
-                  background-color: #b61010;
-               }
+               background-color: #b61010;
             }
          }
       }
 
-      .block {
-         background-color: #00000093;
-         border-radius: 15px;
-         width: 100%;
-         height: 100%;
-         position: relative;
-         text-align: center;
-         overflow-y: auto;
-         padding: 20px;
+      .icon-button {
+         text-align: left;
+         cursor: pointer;
       }
    }
 }

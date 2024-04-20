@@ -5,6 +5,7 @@ import config from '../../config.json'
 import url from '../../url.json'
 
 export default function EventList() {
+   const name = localStorage.getItem('name')
    const [activities, setActivities] = useState([])
    const [ws, setWs] = useState(null)
 
@@ -44,7 +45,7 @@ export default function EventList() {
    return (
       <>
          <div className="eventlist-container">
-            <h1>我們的探究冒險</h1>
+            <h1>{name}的探究冒險</h1>
             <div className="list-container">
                <div className="list">
                   {activities.map((activity) => (
