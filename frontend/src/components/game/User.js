@@ -8,11 +8,13 @@ import {
    Tooltip,
 } from 'chart.js'
 import { Radar } from 'react-chartjs-2'
+import { useNavigate } from 'react-router-dom'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Tooltip)
 
 export default function User() {
    const [chartData, setChartData] = useState({ labels: [], datasets: [] })
+   const navigate = useNavigate()
 
    const options = {
       scales: {
@@ -55,12 +57,17 @@ export default function User() {
       ],
    }
 
+   const back = (e) => {
+      e.preventDefault()
+      navigate('/game/battle-lobby')
+   }
+
    return (
       <>
          <div className="user-container">
             <div className="info-container">
                <div className="left-container">
-                  <a href="" className="back">
+                  <a href="" className="back" onClick={back}>
                      <img src="/game/house.png" alt="" />
                      <p>返回</p>
                   </a>

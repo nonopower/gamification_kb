@@ -12,21 +12,59 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import { common } from '@mui/material/colors'
 import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import config from '../../config.json'
+import url from '../../url.json'
+import { useSignIn } from 'react-auth-kit'
 
 export default function Login() {
    const navigate = useNavigate()
    const [role, setRole] = useState('student')
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
+   const login = useSignIn()
 
    const handleRoleChange = (event) => {
       setRole(event.target.value)
    }
 
-   const handleSubmit = (e) => {
+   const handleSubmit = async (e) => {
       e.preventDefault()
-      console.log(email, password, role)
+
       if (role === 'teacher') navigate('/')
+      if (email === '' || password === '') return
+
+      const userData = {
+         email: email,
+         password: password,
+      }
+
+      try {
+         await axios
+            .post(url.backendHost + config[1].loginUrl, userData)
+            .then((response) => {
+               setEmail('')
+               setPassword('')
+
+               login({
+                  token: response.data.token,
+                  expiresIn: 3600,
+                  tokenType: 'Bearer',
+                  authState: { email: response.data.email },
+               })
+
+               localStorage.setItem('userId', response.data.id)
+               localStorage.setItem('name', response.data.name)
+               localStorage.setItem('email', response.data.email)
+
+               console.log('res: ', response.data)
+            })
+            .catch((error) => {
+               console.error(error)
+            })
+      } finally {
+         if (role === 'student') navigate('/game/lobby')
+      }
    }
    const handleEmailChange = (e) => {
       e.preventDefault()

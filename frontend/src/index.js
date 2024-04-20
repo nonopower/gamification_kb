@@ -1,16 +1,23 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import { AuthProvider } from "react-auth-kit";
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+import { AuthProvider } from 'react-auth-kit'
+import { Provider } from 'react-redux'
+import { store, persistor } from './redux/store'
+import { PersistGate } from 'redux-persist/integration/react'
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
-      <AuthProvider
-        authType={"cookie"}
-        authName={"_auth"}
-        cookieDomain={window.location.hostname}
-        cookieSecure={false}
-      >
-          <App />
-      </AuthProvider> 
-);
+   <AuthProvider
+      authType={'cookie'}
+      authName={'_auth'}
+      cookieDomain={window.location.hostname}
+      cookieSecure={false}
+   >
+      <Provider store={store}>
+         <PersistGate loading={null} persistor={persistor}>
+            <App />
+         </PersistGate>
+      </Provider>
+   </AuthProvider>,
+)

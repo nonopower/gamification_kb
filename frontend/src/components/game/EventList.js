@@ -9,12 +9,9 @@ export default function EventList() {
    const [ws, setWs] = useState(null)
 
    const initWebSocket = () => {
-      ws.on('connect', () => {
-         // console.log(ws.id);
-      })
+      ws.on('connect', () => {})
 
       ws.on('event02', (arg, callback) => {
-         // console.log(arg);
          callback({
             status: 'event02 ok',
          })
@@ -34,7 +31,7 @@ export default function EventList() {
             )
             setActivities(fetchData.data)
          } catch (err) {
-            // console.log(err);
+            console.error(err)
          }
       }
       getActivities()
@@ -44,22 +41,18 @@ export default function EventList() {
       }
    }, [ws])
 
-   useEffect(() => {
-      console.log(activities)
-   }, [activities])
-
    return (
       <>
          <div className="eventlist-container">
-            <h1>我們的冒險主題</h1>
+            <h1>我們的探究冒險</h1>
             <div className="list-container">
                <div className="list">
-                  <EventItem />
-                  <EventItem />
-                  <EventItem />
-                  <EventItem />
-                  <EventItem />
-                  <EventItem />
+                  {activities.map((activity) => (
+                     <EventItem
+                        key={activity.id}
+                        activity={activity.ActivityGroup.Activity}
+                     />
+                  ))}
                </div>
             </div>
          </div>

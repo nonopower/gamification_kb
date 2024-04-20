@@ -75,11 +75,15 @@
       .ranking-list {
          overflow-y: auto;
          width: 100%;
-         height: calc(100% - 97px);
+         height: 100%;
 
          .ranking-scroll {
             width: max-content;
             margin: 0 auto;
+
+            h2 {
+               color: #ffe882;
+            }
 
             .rankingitem-container {
                display: flex;
@@ -120,6 +124,7 @@
       border-radius: 50% 50%;
       left: 30px;
       bottom: 30px;
+      cursor: pointer;
 
       img {
          width: 150px;

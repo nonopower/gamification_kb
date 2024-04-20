@@ -20,26 +20,25 @@ export default function CreateRole() {
       name: '',
       email: '',
       password: '',
-      passwordConf: '',
       school: '',
       city: '',
    })
 
    const handleSubmit = (e) => {
       e.preventDefault()
+
       const userData = {
          name: data.name,
          email: data.email,
          password: data.password,
-         passwordConf: data.passwordConf,
+         passwordConf: data.password,
          school: data.school,
-         city: data.city,
+         city: data.school,
          imageContent: '01.png',
       }
       axios
          .post(url.backendHost + config[0].registerUrl, userData)
-         .then((response) => {
-            console.log(response)
+         .then(() => {
             setData({
                name: '',
                email: '',
@@ -49,8 +48,13 @@ export default function CreateRole() {
                city: '',
                imageContent: '',
             })
+            setTimeout(() => {
+               navigate('/game')
+            }, 1000)
          })
-         .catch((error) => {})
+         .catch((error) => {
+            console.error(error)
+         })
    }
 
    const handleChange = (e) => {

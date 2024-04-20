@@ -112,59 +112,14 @@
       height: 100%;
       display: flex;
       flex-direction: column;
+      position: relative;
 
-      .top,
-      .mid,
       .bottom {
          width: 100%;
-         padding: 15px;
-      }
-
-      .top {
-         height: 30%;
-         text-align: center;
-
-         img {
-            width: 100%;
-            height: 100%;
-         }
-         p {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 24px;
-            color: #ffffff;
-         }
-      }
-
-      .mid {
-         height: 30%;
-
-         .block {
-            display: flex;
-            flex-wrap: wrap;
-         }
-         .member-item {
-            font-size: 20px;
-            width: 50%;
-            color: #ffffff;
-            margin: 20px 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            .status {
-               width: 20px;
-               height: 20px;
-               border-radius: 50%;
-               background-color: #ccc;
-               margin-right: 15px;
-            }
-         }
-      }
-      .bottom {
          height: 40%;
+         padding: 15px;
+         position: absolute;
+         bottom: 0;
 
          img {
             height: 85%;

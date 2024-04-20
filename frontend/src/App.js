@@ -71,9 +71,30 @@ export default function App() {
             <Route path="/game" element={<GameHome />}>
                <Route path="login" element={<Login />} />
                <Route path="create-role" element={<CreateRole />} />
-               <Route path="lobby" element={<Lobby />} />
-               <Route path="user" element={<User />} />
-               <Route path="battle-lobby" element={<Battle />} />
+               <Route
+                  path="lobby"
+                  element={
+                     <RequireAuth loginPath="/game/login">
+                        <Lobby />
+                     </RequireAuth>
+                  }
+               />
+               <Route
+                  path="user"
+                  element={
+                     <RequireAuth loginPath="/game/login">
+                        <User />
+                     </RequireAuth>
+                  }
+               />
+               <Route
+                  path="battle-lobby"
+                  element={
+                     <RequireAuth loginPath="/game/login">
+                        <Battle />
+                     </RequireAuth>
+                  }
+               />
             </Route>
          </Routes>
       </Router>
