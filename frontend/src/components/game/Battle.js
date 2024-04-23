@@ -10,13 +10,9 @@ import io from 'socket.io-client'
 import Graph from 'react-vis-network-graph'
 import { options } from './../../utils/battle-tools'
 import { ViewNode } from './../../components/ViewNode'
-import { useDispatch, useSelector } from 'react-redux'
-import { increment, decrement } from '../../redux/counterSlice'
 
 export default function Battle() {
    // user 點數紀錄
-   const counter = useSelector((state) => state.counterReducer)
-   const dispatch = useDispatch()
    const [open, setOpen] = useState(false)
    const [nodeContent, setNodeContent] = useState(null)
    const [ws, setSocket] = useState(null)
