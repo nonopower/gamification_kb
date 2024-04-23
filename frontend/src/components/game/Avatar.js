@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 export default function Avatar() {
    const navigate = useNavigate()
+   const name = localStorage.getItem('name')
 
    return (
       <>
@@ -12,7 +13,7 @@ export default function Avatar() {
          >
             <img src="/game/gold-medal.png" alt="" />
             <p>Lv.1</p>
-            <p>nono琪</p>
+            <p>{name}</p>
          </div>
       </>
    )

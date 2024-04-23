@@ -12,9 +12,11 @@ import { useNavigate } from 'react-router-dom'
 import config from '../../config.json'
 import url from '../../url.json'
 import axios from 'axios'
+import { useSignIn } from 'react-auth-kit'
 
 export default function CreateRole() {
    const navigate = useNavigate()
+   const login = useSignIn()
 
    const [data, setData] = useState({
       name: '',
@@ -24,7 +26,39 @@ export default function CreateRole() {
       city: '',
    })
 
-   const handleSubmit = (e) => {
+   const loginMethod = async () => {
+      const userData = {
+         email: data.email,
+         password: data.password,
+      }
+
+      await axios
+         .post(url.backendHost + config[1].loginUrl, userData)
+         .then((response) => {
+            login({
+               token: response.data.token,
+               expiresIn: 3600,
+               tokenType: 'Bearer',
+               authState: { email: response.data.email },
+            })
+
+            localStorage.setItem('userId', response.data.id)
+            localStorage.setItem('name', response.data.name)
+            localStorage.setItem('email', response.data.email)
+
+            console.log('res: ', response.data)
+         })
+         .then(() => {
+            setTimeout(() => {
+               navigate('/game/lobby')
+            }, 1000)
+         })
+         .catch((error) => {
+            console.error(error)
+         })
+   }
+
+   const handleSubmit = async (e) => {
       e.preventDefault()
 
       const userData = {
@@ -36,7 +70,7 @@ export default function CreateRole() {
          city: data.school,
          imageContent: '01.png',
       }
-      axios
+      await axios
          .post(url.backendHost + config[0].registerUrl, userData)
          .then(() => {
             setData({
@@ -48,9 +82,9 @@ export default function CreateRole() {
                city: '',
                imageContent: '',
             })
-            setTimeout(() => {
-               navigate('/game')
-            }, 1000)
+         })
+         .then(() => {
+            loginMethod()
          })
          .catch((error) => {
             console.error(error)
