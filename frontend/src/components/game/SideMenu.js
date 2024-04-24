@@ -20,7 +20,6 @@ export default function SideMenu({ ws }) {
    }, [])
 
    const closeModal = useCallback((e) => {
-      e.preventDefault()
       setSelectedModal(null)
    }, [])
 

@@ -4,7 +4,7 @@ export const counterSlice = createSlice({
    name: 'counter',
    initialState: 10000,
    reducers: {
-      setCounter: (state) => state + 1,
+      setCounter: (state, action) => state + action.payload,
    },
 })
 
@@ -12,14 +12,15 @@ export const ideaSlice = createSlice({
    name: 'idea',
    initialState: 0,
    reducers: {
-      setIdea: (state) => state + 1,
+      setIdea: (state, action) => state + action.payload,
    },
 })
+
 export const askSlice = createSlice({
    name: 'ask',
    initialState: 0,
    reducers: {
-      setAsk: (state) => state + 1,
+      setAsk: (state, action) => state + action.payload,
    },
 })
 
@@ -27,7 +28,7 @@ export const infoSlice = createSlice({
    name: 'info',
    initialState: 0,
    reducers: {
-      setInfo: (state) => state + 1,
+      setInfo: (state, action) => state + action.payload,
    },
 })
 
@@ -35,7 +36,7 @@ export const experimentSlice = createSlice({
    name: 'experiment',
    initialState: 0,
    reducers: {
-      setExperiment: (state) => state + 1,
+      setExperiment: (state, action) => state + action.payload,
    },
 })
 
@@ -43,7 +44,7 @@ export const recordSlice = createSlice({
    name: 'record',
    initialState: 0,
    reducers: {
-      setRecord: (state) => state + 1,
+      setRecord: (state, action) => state + action.payload,
    },
 })
 

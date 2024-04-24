@@ -27,6 +27,7 @@ export default function Battle() {
 
    const events = {
       click: (event) => {
+         // 閱讀想法幾則
          if (event.nodes.length === 1) {
             handleClickOpen(event.nodes[0])
             localStorage.setItem('nodeId', event.nodes[0])

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
    Button,
    ButtonGroup,
@@ -18,6 +18,8 @@ import { EditorState, ContentState, CompositeDecorator } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { newNode } from '../utils/ideaTool'
+import { useDispatch, useSelector } from 'react-redux'
+import { setIdea } from '../redux/counterSlice'
 
 const scaffold = [
    <Button key="1">【我有個想法】</Button>,
@@ -74,6 +76,14 @@ export const CreateIdea = ({ open, onClose, ws }) => {
    const [isDisabled, setIsDisabled] = useState(true)
    const [loading, setLoading] = useState(false)
    const [content, setContent] = useState()
+
+   const idea = useSelector((state) => state.idea)
+   const dispatch = useDispatch()
+
+   useEffect(() => {
+      console.log(idea)
+   }, [idea])
+
    const nodeDefault = {
       title: '',
       content: '',
@@ -126,6 +136,9 @@ export const CreateIdea = ({ open, onClose, ws }) => {
 
    const handleSubmit = async (e) => {
       e.preventDefault()
+
+      // dispatch(setIdea(2))
+
       const isTitleValid = data.title.trim().length > 0
       const titleValidLength = data.title.trim().length < 15
       if (
@@ -148,7 +161,6 @@ export const CreateIdea = ({ open, onClose, ws }) => {
       setLoading(true)
       try {
          await newNode(ideaData, localStorage.getItem('activityId'), ws)
-         onClose(onClose)
          setLoading(false)
          setData(nodeDefault)
          setEditorState(EditorState.createEmpty())
@@ -164,6 +176,8 @@ export const CreateIdea = ({ open, onClose, ws }) => {
             // console.log(error);
             setLoading(false)
          }
+      } finally {
+         onClose(onClose)
       }
    }
 
