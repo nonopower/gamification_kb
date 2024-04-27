@@ -114,3 +114,49 @@ exports.updateNode = (req, res) => {
         });
     });
 }
+
+exports.getGroupRanking = (req, res) => {
+    const groupId = req.params.groupId;
+
+    Group.findAll({
+        where: {
+            id: groupId
+        },
+        include: [{
+            model: Node,
+            through: { attributes: [] }
+        }],
+        
+    })
+    .then(data => {
+        if (data) {
+            const authorScores = {};
+            data.forEach(group => {
+                group.Nodes.forEach(node => {
+                    const author = node.author;
+                    if (authorScores[author]) {
+                        authorScores[author]++;
+                    } else {
+                        authorScores[author] = 1;
+                    }
+                });
+            });
+            const result = Object.keys(authorScores).map(author => ({
+                score: authorScores[author],
+                author: author,
+                groupId: data[0].id
+            }));
+            res.send(result);
+        } else {
+          res.status(404).send({
+            message: `Cannot find group with id=${groupId}.`
+          });
+        }
+    })
+    .catch(err => {
+        res.status(500).send({
+          message: 
+            err.message || "Error retrieving group with id=" + groupId,
+        });
+    });
+}
