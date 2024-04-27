@@ -17,6 +17,7 @@ import {
    recordSlice,
    experimentSlice,
    infoSlice,
+   monsterSlice,
 } from './counterSlice'
 
 const persistConfig = {
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
    record: recordSlice.reducer,
    experiment: experimentSlice.reducer,
    info: infoSlice.reducer,
+   monster: monsterSlice.reducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

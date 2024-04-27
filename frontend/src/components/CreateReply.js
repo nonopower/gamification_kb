@@ -21,16 +21,18 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { newNode, newEdge } from '../utils/ideaTool'
 
 const scaffold = [
-   <Button key="1">【💡我的想法】</Button>,
-   <Button key="2">【🧐我覺得更好的想法】</Button>,
-   <Button key="3">【❓我想知道】</Button>,
-   <Button key="4">【🙅🏻這個想法不能解釋】</Button>,
-   <Button key="5">【📄舉例和參考來源】</Button>,
-   <Button key="6">【✍🏻我的總結】</Button>,
+   <Button key="1">【我有個想法】</Button>,
+   <Button key="2">【我有另一種想法】</Button>,
+   <Button key="3">【我覺得有更好的想法】</Button>,
+   <Button key="4">【這個想法不能解釋】</Button>,
+   <Button key="5">【結論是… 反思…】</Button>,
+   <Button key="6">【我查到的資料是】</Button>,
+   <Button key="7">【我查到的範例是】</Button>,
 ]
 
 export const CreateReply = ({ open, onClose, nodeContent, ws }) => {
    const name = localStorage.getItem('name')
+   const [isDisabled, setIsDisabled] = useState(true)
    const nodeDefault = {
       title: '',
       content: '',
@@ -64,7 +66,7 @@ export const CreateReply = ({ open, onClose, nodeContent, ws }) => {
    const handleButtonClick = (buttonText) => {
       // Concatenate the existing content (or an empty string if it's null) with the buttonText
       const newContent = `${data.content || ''} ${buttonText}`
-
+      setIsDisabled(false)
       // Update the 'content' property in the 'data' state with the new concatenated content
       setData({
          ...data,
@@ -214,6 +216,7 @@ export const CreateReply = ({ open, onClose, nodeContent, ws }) => {
                <Button onClick={onClose}>取消</Button>
                <LoadingButton
                   type="submit"
+                  disabled={isDisabled}
                   onClick={handleSubmit}
                   loading={loading}
                   loadingPosition="start"

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+/* eslint-disable no-use-before-define */
+import React, { useState, useEffect, useCallback } from 'react'
 import SideMenu from './SideMenu'
 import BattleRightInfo from './BattleRightInfo'
 import './battle.scss'
@@ -28,6 +29,7 @@ export default function Battle() {
    const events = {
       click: (event) => {
          // 閱讀想法幾則
+         console.log(1)
          if (event.nodes.length === 1) {
             handleClickOpen(event.nodes[0])
             localStorage.setItem('nodeId', event.nodes[0])
@@ -38,7 +40,7 @@ export default function Battle() {
          if (dragNodeId) {
             const nodePositions = event.pointer.DOM
             graph.nodes.forEach((element) => {
-               if (element.id == dragNodeId) {
+               if (element.id === dragNodeId) {
                   element.x = nodePositions.x
                   element.y = nodePositions.y
                }
@@ -47,7 +49,34 @@ export default function Battle() {
       },
    }
 
-   const getNodes = async () => {
+   const fetchGroupData = useCallback(async () => {
+      const enterDifferentGroupEndpoint = `${url.backendHost}${config[16].EnterDifferentGroup}${localStorage.getItem('joinCode')}/${localStorage.getItem('userId')}`
+      const getMyGroupEndpoint = `${url.backendHost}${config[12].getMyGroup}/${localStorage.getItem('activityId')}/${localStorage.getItem('userId')}`
+
+      try {
+         const response = await axios.get(enterDifferentGroupEndpoint, {
+            headers: {
+               authorization: 'Bearer JWT Token',
+            },
+         })
+         localStorage.setItem('groupId', response.data.data[0].id)
+      } catch (error) {
+         try {
+            const response = await axios.get(getMyGroupEndpoint, {
+               headers: {
+                  authorization: 'Bearer JWT Token',
+               },
+            })
+            localStorage.setItem('groupId', response.data.data[0].id)
+         } catch (error) {
+            console.error(error)
+         }
+      } finally {
+         await getNodes()
+      }
+   }, [])
+
+   const getNodes = useCallback(async () => {
       if (localStorage.getItem('groupId') == null) {
          const asyncFn = async () => {
             await fetchGroupData()
@@ -83,34 +112,7 @@ export default function Battle() {
          nodes: nodeData,
          edges: edgeData,
       })
-   }
-
-   const fetchGroupData = async () => {
-      const enterDifferentGroupEndpoint = `${url.backendHost}${config[16].EnterDifferentGroup}${localStorage.getItem('joinCode')}/${localStorage.getItem('userId')}`
-      const getMyGroupEndpoint = `${url.backendHost}${config[12].getMyGroup}/${localStorage.getItem('activityId')}/${localStorage.getItem('userId')}`
-
-      try {
-         const response = await axios.get(enterDifferentGroupEndpoint, {
-            headers: {
-               authorization: 'Bearer JWT Token',
-            },
-         })
-         localStorage.setItem('groupId', response.data.data[0].id)
-      } catch (error) {
-         try {
-            const response = await axios.get(getMyGroupEndpoint, {
-               headers: {
-                  authorization: 'Bearer JWT Token',
-               },
-            })
-            localStorage.setItem('groupId', response.data.data[0].id)
-         } catch (error) {
-            console.error(error)
-         }
-      } finally {
-         await getNodes()
-      }
-   }
+   }, [])
 
    const handleClickOpen = (nodeId) => {
       setNodeContent(null)
@@ -118,7 +120,7 @@ export default function Battle() {
       fetchNodeData(nodeId)
    }
 
-   const fetchNodeData = async (nodeId) => {
+   const fetchNodeData = useCallback(async (nodeId) => {
       try {
          const response = await axios.get(
             `${url.backendHost + config[11].getOneNode}/${nodeId}`,
@@ -127,7 +129,7 @@ export default function Battle() {
       } catch (err) {
          console.error(err)
       }
-   }
+   }, [])
 
    const handleClose = () => {
       setOpen(false)
@@ -139,7 +141,7 @@ export default function Battle() {
          setSocket(io.connect(url.socketioHost))
       }
       fetchData()
-   }, [])
+   }, [fetchGroupData, fetchNodeData])
 
    return (
       <>
