@@ -5,34 +5,34 @@ export const monsterArr = [
    {
       name: 'LV.1',
       blood: 20,
-      img: '',
+      img: '/game/monster/monster_zombie_',
    },
    {
       name: 'LV.2',
       blood: 50,
-      img: '',
+      img: '/game/monster/monster_robot_',
    },
    {
       name: 'LV.3',
       blood: 100,
-      img: '',
+      img: '/game/monster/monster_bear_',
    },
    {
       name: 'LV.4',
       blood: 150,
-      img: '',
+      img: '/game/monster/monster_cloak_',
    },
    {
       name: 'LV.5',
       blood: 300,
-      img: '',
+      img: '/game/monster/monster_lion_',
    },
 ]
 
 // point
 export const counterSlice = createSlice({
    name: 'counter',
-   initialState: 10000,
+   initialState: 0,
    reducers: {
       setCounter: (state, action) => state + action.payload,
    },

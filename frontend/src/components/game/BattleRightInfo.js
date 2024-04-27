@@ -68,6 +68,7 @@ export default function BattleRightInfo() {
       return () => clearInterval(fiveminsIntervalIdRef.current)
    }, [])
 
+   // 監聽怪物模式，觸發對應操作
    useEffect(() => {
       if (monster.mode === 'normal') {
          const clearTimer = fiveminsInterval().then(() => {

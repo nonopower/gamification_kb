@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './create-role.scss'
+import SwipeableViews from 'react-swipeable-views'
 import Stack from '@mui/material/Stack'
 import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
@@ -13,10 +14,53 @@ import config from '../../config.json'
 import url from '../../url.json'
 import axios from 'axios'
 import { useSignIn } from 'react-auth-kit'
+import { useTheme } from '@mui/material/styles'
+import Box from '@mui/material/Box'
+import MobileStepper from '@mui/material/MobileStepper'
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
+
+const images = [
+   {
+      label: 'bird',
+      imgPath: '/game/role/bird_1.png',
+   },
+   {
+      label: '2swords',
+      imgPath: '/game/role/m_2swords_1.png',
+   },
+   {
+      label: 'blue',
+      imgPath: '/game/role/m_blue_1.png',
+   },
+   {
+      label: 'ninja',
+      imgPath: '/game/role/m_ninja_1.png',
+   },
+   {
+      label: 'mouse',
+      imgPath: '/game/role/mouse_1.png',
+   },
+   {
+      label: 'green',
+      imgPath: '/game/role/w_green_1.png',
+   },
+   {
+      label: 'leather',
+      imgPath: '/game/role/w_leather_1.png',
+   },
+   {
+      label: 'ponytail',
+      imgPath: '/game/role/w_ponytail_1.png',
+   },
+]
 
 export default function CreateRole() {
    const navigate = useNavigate()
    const login = useSignIn()
+   const theme = useTheme()
+   const [activeStep, setActiveStep] = useState(0)
+   const maxSteps = images.length
 
    const [data, setData] = useState({
       name: '',
@@ -68,7 +112,7 @@ export default function CreateRole() {
          passwordConf: data.password,
          school: data.school,
          city: data.school,
-         imageContent: '01.png',
+         imageContent: images[activeStep].imgPath.slice(0, -5),
       }
       await axios
          .post(url.backendHost + config[0].registerUrl, userData)
@@ -100,6 +144,17 @@ export default function CreateRole() {
          ...data,
          [e.target.name]: value,
       })
+   }
+
+   const handleStepChange = (step) => {
+      setActiveStep(step)
+   }
+   const handleNext = () => {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1)
+   }
+
+   const handleBack = () => {
+      setActiveStep((prevActiveStep) => prevActiveStep - 1)
    }
 
    return (
@@ -213,13 +268,88 @@ export default function CreateRole() {
                   </Stack>
                </div>
                <div className="right-container">
-                  <div className="title">
-                     <img src="/game/title.png" alt="" />
-                  </div>
-                  <a href="/" className="play" onClick={handleSubmit}>
-                     <img src="/game/play.png" alt="" />
-                     <img src="/game/play2.png" alt="" />
-                  </a>
+                  <div className="title">{data.name}</div>
+
+                  <Box width="50%">
+                     <SwipeableViews
+                        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                        index={activeStep}
+                        onChangeIndex={handleStepChange}
+                        enableMouseEvents
+                     >
+                        {images.map((step, index) => (
+                           <Box
+                              key={index}
+                              sx={{
+                                 display: 'flex',
+                                 justifyContent: 'center',
+                                 alignItems: 'center',
+                              }}
+                           >
+                              {Math.abs(activeStep - index) <= 2 ? (
+                                 <Box
+                                    component="img"
+                                    sx={{
+                                       height: 255,
+                                       display: 'flex',
+                                       justifyContent: 'center',
+                                       alignItems: 'center',
+                                       overflow: 'hidden',
+                                       width: 'auto',
+                                    }}
+                                    src={step.imgPath}
+                                    alt={step.label}
+                                 />
+                              ) : null}
+                           </Box>
+                        ))}
+                     </SwipeableViews>
+                     <MobileStepper
+                        sx={{ backgroundColor: 'transparent' }}
+                        steps={maxSteps}
+                        position="static"
+                        activeStep={activeStep}
+                        nextButton={
+                           <Button
+                              size="small"
+                              onClick={handleNext}
+                              sx={{ color: '#ffffff', fontSize: '30px' }}
+                              disabled={activeStep === maxSteps - 1}
+                           >
+                              Next
+                              {theme.direction === 'rtl' ? (
+                                 <KeyboardArrowLeft />
+                              ) : (
+                                 <KeyboardArrowRight />
+                              )}
+                           </Button>
+                        }
+                        backButton={
+                           <Button
+                              size="large"
+                              onClick={handleBack}
+                              disabled={activeStep === 0}
+                              sx={{
+                                 color: '#ffffff',
+                                 fontSize: '30px',
+                              }}
+                           >
+                              {theme.direction === 'rtl' ? (
+                                 <KeyboardArrowRight />
+                              ) : (
+                                 <KeyboardArrowLeft />
+                              )}
+                              Back
+                           </Button>
+                        }
+                     />
+                  </Box>
+                  <Box className="play">
+                     <a href="/" onClick={handleSubmit}>
+                        <img src="/game/play.png" alt="" />
+                        <img src="/game/play2.png" alt="" />
+                     </a>
+                  </Box>
                </div>
             </div>
          </div>

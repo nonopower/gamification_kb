@@ -29,6 +29,17 @@
          justify-content: center;
          align-items: center;
 
+         .title {
+            max-width: 200px;
+            height: 35px;
+            color: #fff;
+            font-size: 30px;
+            margin-bottom: 15px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+         }
+
          .play {
             display: inline-block;
             width: 35%;
