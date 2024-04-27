@@ -80,6 +80,7 @@ require("./routes/subPart.routes")(app);
 require("./routes/node.routes")(app);
 require("./routes/edge.routes")(app);
 require("./routes/radar.routes")(app);
+require("./routes/boss.routes")(app);
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to bezkoder application." });

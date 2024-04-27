@@ -7,6 +7,7 @@ const SubPart = require('./subPart.controller');
 const Node = require('./node.controller');
 const Edge = require('./edge.controller');
 const Radar = require('./radar.controller');
+const Boss = require('./boss.controller');
 
 module.exports = {
   User,
@@ -17,5 +18,6 @@ module.exports = {
   SubPart,
   Node,
   Edge,
-  Radar
+  Radar,
+  Boss
 };

@@ -41,6 +41,7 @@ db.Node = require("./node.model.js")(sequelize, DataTypes);
 db.GroupNode = require("./groupNode.model.js")(sequelize, DataTypes);
 db.Edge = require("./edge.model.js")(sequelize, DataTypes);
 db.Radar = require("./radar.model.js")(sequelize, DataTypes);
+db.Boss = require("./boss.model.js")(sequelize, DataTypes);
 
 db.User.belongsToMany(db.Profile, { through: db.UserProfile });
 db.Profile.belongsToMany(db.User, { through: db.UserProfile });
