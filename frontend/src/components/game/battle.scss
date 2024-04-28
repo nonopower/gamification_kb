@@ -123,10 +123,6 @@
       right: 20px;
       bottom: 20px;
 
-      img {
-         height: 85%;
-      }
-
       .bar-container {
          color: #fff;
          width: 80%;
@@ -150,7 +146,6 @@
             background-color: #333333;
 
             .bar {
-               width: 50%;
                height: 100%;
                border-radius: 10px;
                background-color: #b61010;
@@ -161,6 +156,13 @@
       .icon-button {
          text-align: left;
          cursor: pointer;
+      }
+
+      .monster-container {
+         height: 70%;
+         img {
+            height: 100%;
+         }
       }
    }
 }

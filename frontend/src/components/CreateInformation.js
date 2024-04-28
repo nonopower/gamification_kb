@@ -19,10 +19,11 @@ import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { newNode } from '../utils/ideaTool'
 import { useDispatch, useSelector } from 'react-redux'
-import { setInfo } from '../redux/counterSlice'
+import { setInfo, setPoint } from '../redux/counterSlice'
 
 export const CreateInformation = ({ open, onClose, ws }) => {
    const info = useSelector((state) => state.info)
+   const point = useSelector((state) => state.point)
    const dispatch = useDispatch()
 
    useEffect(() => {
@@ -86,6 +87,9 @@ export const CreateInformation = ({ open, onClose, ws }) => {
          setLoading(false)
          setData(nodeDefault)
          setEditorState(EditorState.createEmpty())
+         // redux 更新
+         dispatch(setInfo(1))
+         dispatch(setPoint(2))
       } catch (error) {
          if (error.response) {
             // console.log(error.response);

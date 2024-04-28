@@ -19,15 +19,12 @@ import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { newNode } from '../utils/ideaTool'
 import { useDispatch, useSelector } from 'react-redux'
-import { setRecord } from '../redux/counterSlice'
+import { setRecord, setPoint } from '../redux/counterSlice'
 
 export const CreateNote = ({ open, onClose, ws }) => {
    const record = useSelector((state) => state.record)
+   const point = useSelector((state) => state.point)
    const dispatch = useDispatch()
-
-   useEffect(() => {
-      console.log(record)
-   }, [record])
 
    const name = localStorage.getItem('name')
    const [editorState, setEditorState] = useState(EditorState.createEmpty())
@@ -86,6 +83,9 @@ export const CreateNote = ({ open, onClose, ws }) => {
          setLoading(false)
          setData(nodeDefault)
          setEditorState(EditorState.createEmpty())
+         // redux 更新
+         dispatch(setRecord(1))
+         dispatch(setPoint(2))
       } catch (error) {
          if (error.response) {
             // console.log(error.response);

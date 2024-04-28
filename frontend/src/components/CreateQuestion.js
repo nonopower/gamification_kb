@@ -16,15 +16,12 @@ import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { newNode } from '../utils/ideaTool'
 import { useDispatch, useSelector } from 'react-redux'
-import { setAsk } from '../redux/counterSlice'
+import { setAsk, setPoint } from '../redux/counterSlice'
 
 export const CreateQuestion = ({ open, onClose, ws }) => {
    const ask = useSelector((state) => state.ask)
+   const point = useSelector((state) => state.point)
    const dispatch = useDispatch()
-
-   useEffect(() => {
-      console.log(ask)
-   }, [ask])
 
    const name = localStorage.getItem('name')
    const [editorState, setEditorState] = useState(EditorState.createEmpty())
@@ -83,6 +80,9 @@ export const CreateQuestion = ({ open, onClose, ws }) => {
          setLoading(false)
          setData(nodeDefault)
          setEditorState(EditorState.createEmpty())
+         // redux 更新
+         dispatch(setAsk(1))
+         dispatch(setPoint(2))
       } catch (error) {
          if (error.response) {
             // console.log(error.response);

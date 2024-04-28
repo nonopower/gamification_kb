@@ -15,6 +15,7 @@ ChartJS.register(RadialLinearScale, PointElement, LineElement, Tooltip)
 export default function User() {
    const [chartData, setChartData] = useState({ labels: [], datasets: [] })
    const name = localStorage.getItem('name')
+   const role = localStorage.getItem('role') + '1.png'
    const navigate = useNavigate()
 
    const options = {
@@ -80,7 +81,7 @@ export default function User() {
                      <h4>（排行榜第25名）</h4>
                   </div>
                   <div className="avatar">
-                     <img src="/game/title.png" alt="" />
+                     <img src={role} alt="" />
                   </div>
                   <div className="bar-container">
                      <h4>Lv.1</h4>

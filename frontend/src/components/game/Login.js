@@ -56,6 +56,7 @@ export default function Login() {
                localStorage.setItem('userId', response.data.id)
                localStorage.setItem('name', response.data.name)
                localStorage.setItem('email', response.data.email)
+               localStorage.setItem('role', response.data.imageContent)
 
                console.log('res: ', response.data)
             })

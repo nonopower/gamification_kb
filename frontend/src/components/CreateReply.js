@@ -19,6 +19,8 @@ import { EditorState, ContentState } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { newNode, newEdge } from '../utils/ideaTool'
+import { useDispatch, useSelector } from 'react-redux'
+import { setReply, setPoint } from '../redux/counterSlice'
 
 const scaffold = [
    <Button key="1">【我有個想法】</Button>,
@@ -31,6 +33,10 @@ const scaffold = [
 ]
 
 export const CreateReply = ({ open, onClose, nodeContent, ws }) => {
+   const reply = useSelector((state) => state.reply)
+   const point = useSelector((state) => state.point)
+   const dispatch = useDispatch()
+
    const name = localStorage.getItem('name')
    const [isDisabled, setIsDisabled] = useState(true)
    const nodeDefault = {
@@ -129,6 +135,9 @@ export const CreateReply = ({ open, onClose, nodeContent, ws }) => {
          setLoading(false)
          setData(nodeDefault)
          setEditorState(EditorState.createEmpty())
+         // redux 更新
+         dispatch(setReply(1))
+         dispatch(setPoint(2))
       } catch (error) {
          if (error.response) {
             // console.log(error.response);

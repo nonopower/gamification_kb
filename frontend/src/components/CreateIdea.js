@@ -19,7 +19,7 @@ import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { newNode } from '../utils/ideaTool'
 import { useDispatch, useSelector } from 'react-redux'
-import { setIdea } from '../redux/counterSlice'
+import { setIdea, setPoint } from '../redux/counterSlice'
 
 const scaffold = [
    <Button key="1">【我有個想法】</Button>,
@@ -78,6 +78,7 @@ export const CreateIdea = ({ open, onClose, ws }) => {
    const [content, setContent] = useState()
 
    const idea = useSelector((state) => state.idea)
+   const point = useSelector((state) => state.point)
    const dispatch = useDispatch()
 
    useEffect(() => {
@@ -164,6 +165,9 @@ export const CreateIdea = ({ open, onClose, ws }) => {
          setLoading(false)
          setData(nodeDefault)
          setEditorState(EditorState.createEmpty())
+         // redux 更新
+         dispatch(setIdea(1))
+         dispatch(setPoint(2))
       } catch (error) {
          if (error.response) {
             // console.log(error.response);

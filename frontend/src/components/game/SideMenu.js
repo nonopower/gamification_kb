@@ -8,18 +8,34 @@ import { useNavigate } from 'react-router-dom'
 import config from '../../config.json'
 import url from '../../url.json'
 import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux'
+import { setMode } from '../../redux/counterSlice'
 
 export default function SideMenu({ ws }) {
+   const dispatch = useDispatch()
+   const monster = useSelector((state) => state.monster)
    const navigate = useNavigate()
    const [selectedModal, setSelectedModal] = useState(null)
    // const [activityData, setActivityData] = useState(null)
 
-   const openModal = useCallback((modalKey, e) => {
+   const openModal = useCallback(async (modalKey, e) => {
       e.preventDefault()
       setSelectedModal(modalKey)
+      dispatch(
+         setMode({
+            ...monster,
+            mode: 'battle',
+         }),
+      )
    }, [])
 
-   const closeModal = useCallback((e) => {
+   const closeModal = useCallback(async (e) => {
+      dispatch(
+         setMode({
+            ...monster,
+            mode: 'normal',
+         }),
+      )
       setSelectedModal(null)
    }, [])
 

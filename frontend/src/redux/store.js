@@ -11,13 +11,16 @@ import {
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import {
-   counterSlice,
+   pointSlice,
    ideaSlice,
    askSlice,
    recordSlice,
    experimentSlice,
    infoSlice,
    monsterSlice,
+   readSlice,
+   replySlice,
+   onlineSlice,
 } from './counterSlice'
 
 const persistConfig = {
@@ -26,13 +29,16 @@ const persistConfig = {
 }
 
 const rootReducer = combineReducers({
-   counter: counterSlice.reducer,
+   point: pointSlice.reducer,
    idea: ideaSlice.reducer,
    ask: askSlice.reducer,
    record: recordSlice.reducer,
    experiment: experimentSlice.reducer,
    info: infoSlice.reducer,
    monster: monsterSlice.reducer,
+   read: readSlice.reducer,
+   reply: replySlice.reducer,
+   online: onlineSlice.reducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

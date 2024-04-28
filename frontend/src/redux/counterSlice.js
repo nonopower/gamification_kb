@@ -30,11 +30,11 @@ export const monsterArr = [
 ]
 
 // point
-export const counterSlice = createSlice({
-   name: 'counter',
+export const pointSlice = createSlice({
+   name: 'point',
    initialState: 0,
    reducers: {
-      setCounter: (state, action) => state + action.payload,
+      setPoint: (state, action) => state + action.payload,
    },
 })
 
@@ -83,6 +83,33 @@ export const recordSlice = createSlice({
    },
 })
 
+// 已閱讀
+export const readSlice = createSlice({
+   name: 'read',
+   initialState: 0,
+   reducers: {
+      setRead: (state, action) => state + action.payload,
+   },
+})
+
+// 已回覆
+export const replySlice = createSlice({
+   name: 'reply',
+   initialState: 0,
+   reducers: {
+      setReply: (state, action) => state + action.payload,
+   },
+})
+
+// 上線時間
+export const onlineSlice = createSlice({
+   name: 'online',
+   initialState: 0,
+   reducers: {
+      setOnline: (state, action) => state + action.payload,
+   },
+})
+
 // 正在打的怪
 export const monsterSlice = createSlice({
    name: 'monster',
@@ -95,7 +122,7 @@ export const monsterSlice = createSlice({
          }
       },
       setOtherMonster: (state, action) => action.payload,
-      setMod: (state, action) => {
+      setMode: (state, action) => {
          return {
             ...state,
             mode: action.payload.mode,
@@ -104,10 +131,13 @@ export const monsterSlice = createSlice({
    },
 })
 
-export const { setCounter } = counterSlice.actions
+export const { setPoint } = pointSlice.actions
 export const { setIdea } = ideaSlice.actions
 export const { setInfo } = infoSlice.actions
 export const { setAsk } = askSlice.actions
 export const { setExperiment } = experimentSlice.actions
 export const { setRecord } = recordSlice.actions
-export const { setBlood, setOtherMonster, setMod } = monsterSlice.actions
+export const { setRead } = readSlice.actions
+export const { setReply } = replySlice.actions
+export const { setOnline } = onlineSlice.actions
+export const { setBlood, setOtherMonster, setMode } = monsterSlice.actions

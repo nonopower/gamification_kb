@@ -18,12 +18,15 @@ import { EditorState, convertToRaw } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { newNode } from '../utils/ideaTool'
+// redux
 import { useDispatch, useSelector } from 'react-redux'
-import { setExperiment } from '../redux/counterSlice'
+import { setExperiment, setPoint } from '../redux/counterSlice'
 
 export const CreateFlask = ({ open, onClose, ws }) => {
    const experiment = useSelector((state) => state.experiment)
+   const point = useSelector((state) => state.point)
    const dispatch = useDispatch()
+
    const name = localStorage.getItem('name')
    const [editorState, setEditorState] = useState(EditorState.createEmpty())
    const [loading, setLoading] = useState(false)
@@ -86,6 +89,9 @@ export const CreateFlask = ({ open, onClose, ws }) => {
          setLoading(false)
          setData(nodeDefault)
          setEditorState(EditorState.createEmpty())
+         // redux 更新
+         dispatch(setExperiment(1))
+         dispatch(setPoint(2))
       } catch (error) {
          if (error.response) {
             // console.log(error.response);
@@ -100,6 +106,10 @@ export const CreateFlask = ({ open, onClose, ws }) => {
          }
       }
    }
+
+   useEffect(() => {
+      console.log(point, experiment)
+   }, [point, experiment])
 
    return (
       <>

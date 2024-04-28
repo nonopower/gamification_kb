@@ -22,14 +22,9 @@ export default function Battle() {
       edges: [],
    })
 
-   // const incrementPoint = () => {
-   //    dispatch(increment())
-   // }
-
    const events = {
       click: (event) => {
          // 閱讀想法幾則
-         console.log(1)
          if (event.nodes.length === 1) {
             handleClickOpen(event.nodes[0])
             localStorage.setItem('nodeId', event.nodes[0])
