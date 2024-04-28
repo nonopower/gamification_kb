@@ -38,34 +38,30 @@ export default function Login() {
          email: email,
          password: password,
       }
+      await axios
+         .post(url.backendHost + config[1].loginUrl, userData)
+         .then((response) => {
+            setEmail('')
+            setPassword('')
 
-      try {
-         await axios
-            .post(url.backendHost + config[1].loginUrl, userData)
-            .then((response) => {
-               setEmail('')
-               setPassword('')
-
-               login({
-                  token: response.data.token,
-                  expiresIn: 3600,
-                  tokenType: 'Bearer',
-                  authState: { email: response.data.email },
-               })
-
-               localStorage.setItem('userId', response.data.id)
-               localStorage.setItem('name', response.data.name)
-               localStorage.setItem('email', response.data.email)
-               localStorage.setItem('role', response.data.imageContent)
-
-               console.log('res: ', response.data)
+            login({
+               token: response.data.token,
+               expiresIn: 3600,
+               tokenType: 'Bearer',
+               authState: { email: response.data.email },
             })
-            .catch((error) => {
-               console.error(error)
-            })
-      } finally {
-         if (role === 'student') navigate('/game/lobby')
-      }
+
+            localStorage.setItem('userId', response.data.id)
+            localStorage.setItem('name', response.data.name)
+            localStorage.setItem('email', response.data.email)
+            localStorage.setItem('role', response.data.imageContent)
+
+            console.log('res: ', response.data)
+            if (role === 'student') navigate('/game/lobby')
+         })
+         .catch((error) => {
+            console.error(error)
+         })
    }
    const handleEmailChange = (e) => {
       e.preventDefault()
