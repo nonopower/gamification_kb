@@ -13,7 +13,7 @@ sio = socketio.SimpleClient()
 # with the server
 async def ws_client():
     print("WebSocket: Client Connected.")
-    url = "ws://127.0.0.1:3000"
+    url = "ws://127.0.0.1:3030"
     # Connect to the server
     async with socketio.AsyncSimpleClient() as sio:
         await sio.connect(url)

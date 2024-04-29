@@ -1,4 +1,4 @@
 {
    "backendHost": "http://111.184.127.25:8000/",
-   "socketioHost": "http://127.0.0.1:3000/"
+   "socketioHost": "http://127.0.0.1:3030/"
 }
