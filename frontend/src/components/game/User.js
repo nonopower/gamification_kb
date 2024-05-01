@@ -9,6 +9,7 @@ import {
 } from 'chart.js'
 import { Radar } from 'react-chartjs-2'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Tooltip)
 
@@ -17,6 +18,19 @@ export default function User() {
    const name = localStorage.getItem('name')
    const role = localStorage.getItem('role') + '1.png'
    const navigate = useNavigate()
+
+   // 想法
+   const idea = useSelector((state) => state.idea)
+   // 資訊
+   const info = useSelector((state) => state.info)
+   // 回覆
+   const reply = useSelector((state) => state.reply)
+   // 提問
+   const ask = useSelector((state) => state.ask)
+   // 紀錄
+   const record = useSelector((state) => state.record)
+   // 實驗
+   const experiment = useSelector((state) => state.experiment)
 
    const options = {
       scales: {
@@ -51,7 +65,7 @@ export default function User() {
       labels: ['想法', '回覆', '提問', '紀錄', '實驗', '資訊'],
       datasets: [
          {
-            data: [2, 2, 3, 4, 1, 6],
+            data: [idea, reply, ask, record, experiment, info],
             backgroundColor: '#ffd12a',
             borderColor: '#ffd12a',
             borderWidth: 2,

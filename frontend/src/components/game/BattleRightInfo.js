@@ -13,6 +13,15 @@ export default function BattleRightInfo() {
    // 設定第一隻 or 在打的怪
    useEffect(() => {
       try {
+         if (localStorage.getItem('monster')) {
+            const nowMonster = localStorage.getItem('monster')
+            const nowIndex = monsterArr.findIndex(
+               (item) => item.name === nowMonster,
+            )
+            localStorage.setItem('totalBlood', monsterArr[nowIndex].blood)
+            setNowMonsterImg(monsterArr[nowIndex].img + '1.png')
+            getBloodWidth()
+         }
          if (!localStorage.getItem('monster')) {
             try {
                localStorage.setItem('monster', monsterArr[0].name)
@@ -23,15 +32,6 @@ export default function BattleRightInfo() {
                setNowMonsterImg(monsterArr[0].img + '1.png')
                getBloodWidth()
             }
-         }
-         if (localStorage.getItem('monster')) {
-            const nowMonster = localStorage.getItem('monster')
-            const nowIndex = monsterArr.findIndex(
-               (item) => item.name === nowMonster,
-            )
-            localStorage.setItem('totalBlood', monsterArr[nowIndex].blood)
-            setNowMonsterImg(monsterArr[nowIndex].img + '1.png')
-            getBloodWidth()
          }
       } finally {
          eventBus.emit('loading', false)
@@ -95,13 +95,17 @@ export default function BattleRightInfo() {
       })
 
       eventBus.on('monster-mode', (mode) => {
+         const nowMonster = localStorage.getItem('monster')
+         const nowIndex = monsterArr.findIndex(
+            (item) => item.name === nowMonster,
+         )
          if (mode === 'normal') {
-            setNowMonsterImg(monsterArr[0].img + '1.png')
+            setNowMonsterImg(monsterArr[nowIndex].img + '1.png')
             fiveminsInterval().then(() => {
                addBloodInterval()
             })
          } else {
-            setNowMonsterImg(monsterArr[0].img + '2.gif')
+            setNowMonsterImg(monsterArr[nowIndex].img + '2.gif')
             clearInterval(fiveminsIntervalIdRef.current)
             clearInterval(addBloodIntervalIdRef.current)
             setSeconds(0)

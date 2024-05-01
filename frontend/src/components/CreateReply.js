@@ -21,6 +21,8 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { newNode, newEdge } from '../utils/ideaTool'
 import { useDispatch, useSelector } from 'react-redux'
 import { setReply, setPoint } from '../redux/counterSlice'
+import axios from 'axios'
+import url from './../url.json'
 
 const scaffold = [
    <Button key="1">【我有個想法】</Button>,
@@ -88,6 +90,20 @@ export const CreateReply = ({ open, onClose, nodeContent, ws }) => {
       setEditorState(newEditorState)
    }
 
+   const updateRadar = async () => {
+      try {
+         const data = {
+            id: localStorage.getItem('userId'),
+            reply: reply,
+         }
+         const callURL = `${url.backendHost}api/radar/updateReplyScore`
+
+         await axios.post(callURL, data)
+      } catch (err) {
+         console.error(err)
+      }
+   }
+
    const handleSubmit = async (e) => {
       // 回覆貼文幾則
       e.preventDefault()
@@ -118,6 +134,7 @@ export const CreateReply = ({ open, onClose, nodeContent, ws }) => {
             localStorage.getItem('activityId'),
             ws,
          )
+         await updateRadar()
          // console.log(`CreateIdea:responseFromPostNode.data: ${responseFromPostNode.data}`)
          const edgeData = {
             groupId: localStorage.getItem('groupId'),

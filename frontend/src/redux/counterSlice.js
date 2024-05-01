@@ -119,27 +119,6 @@ export const onlineSlice = createSlice({
    },
 })
 
-// 正在打的怪
-export const monsterSlice = createSlice({
-   name: 'monster',
-   initialState: { name: '', blood: 0, mode: 'normal' },
-   reducers: {
-      setBlood: (state, action) => {
-         return {
-            ...state,
-            blood: action.payload.blood,
-         }
-      },
-      setOtherMonster: (state, action) => action.payload,
-      setMode: (state, action) => {
-         return {
-            ...state,
-            mode: action.payload.mode,
-         }
-      },
-   },
-})
-
 export const { setPoint } = pointSlice.actions
 export const { setIdea } = ideaSlice.actions
 export const { setInfo } = infoSlice.actions
@@ -149,4 +128,3 @@ export const { setRecord } = recordSlice.actions
 export const { setRead } = readSlice.actions
 export const { setReply } = replySlice.actions
 export const { setOnline } = onlineSlice.actions
-export const { setBlood, setOtherMonster, setMode } = monsterSlice.actions

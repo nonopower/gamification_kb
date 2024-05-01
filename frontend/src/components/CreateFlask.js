@@ -21,6 +21,8 @@ import { newNode } from '../utils/ideaTool'
 // redux
 import { useDispatch, useSelector } from 'react-redux'
 import { setExperiment, setPoint } from '../redux/counterSlice'
+import axios from 'axios'
+import url from './../url.json'
 
 export const CreateFlask = ({ open, onClose, ws }) => {
    const experiment = useSelector((state) => state.experiment)
@@ -57,6 +59,20 @@ export const CreateFlask = ({ open, onClose, ws }) => {
       })
    }
 
+   const updateRadar = async () => {
+      try {
+         const data = {
+            id: localStorage.getItem('userId'),
+            experiment: experiment,
+         }
+         const callURL = `${url.backendHost}api/radar/updateExperimentScore`
+
+         await axios.post(callURL, data)
+      } catch (err) {
+         console.error(err)
+      }
+   }
+
    const handleSubmit = async (e) => {
       e.preventDefault()
       const isTitleValid = data.title.trim().length > 0
@@ -81,6 +97,7 @@ export const CreateFlask = ({ open, onClose, ws }) => {
       setLoading(true)
       try {
          await newNode(ideaData, localStorage.getItem('activityId'), ws)
+         await updateRadar()
          onClose(onClose)
          setLoading(false)
          setData(nodeDefault)

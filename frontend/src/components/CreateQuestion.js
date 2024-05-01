@@ -17,6 +17,8 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { newNode } from '../utils/ideaTool'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAsk, setPoint } from '../redux/counterSlice'
+import axios from 'axios'
+import url from './../url.json'
 
 export const CreateQuestion = ({ open, onClose, ws }) => {
    const ask = useSelector((state) => state.ask)
@@ -52,6 +54,20 @@ export const CreateQuestion = ({ open, onClose, ws }) => {
       })
    }
 
+   const updateRadar = async () => {
+      try {
+         const data = {
+            id: localStorage.getItem('userId'),
+            ask: ask,
+         }
+         const callURL = `${url.backendHost}api/radar/updateAskScore`
+
+         await axios.post(callURL, data)
+      } catch (err) {
+         console.error(err)
+      }
+   }
+
    const handleSubmit = async (e) => {
       e.preventDefault()
       const isTitleValid = data.title.trim().length > 0
@@ -76,6 +92,7 @@ export const CreateQuestion = ({ open, onClose, ws }) => {
       setLoading(true)
       try {
          await newNode(ideaData, localStorage.getItem('activityId'), ws)
+         await updateRadar()
          onClose(onClose)
          setLoading(false)
          setData(nodeDefault)
