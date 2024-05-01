@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import './user.scss'
 import {
    Chart as ChartJS,
@@ -15,6 +15,7 @@ ChartJS.register(RadialLinearScale, PointElement, LineElement, Tooltip)
 
 export default function User() {
    const [chartData, setChartData] = useState({ labels: [], datasets: [] })
+   const [lv, setLv] = useState(1)
    const name = localStorage.getItem('name')
    const role = localStorage.getItem('role') + '1.png'
    const navigate = useNavigate()
@@ -31,6 +32,8 @@ export default function User() {
    const record = useSelector((state) => state.record)
    // 實驗
    const experiment = useSelector((state) => state.experiment)
+   // point
+   const point = useSelector((state) => state.point)
 
    const options = {
       scales: {
@@ -78,6 +81,27 @@ export default function User() {
       navigate(-1)
    }
 
+   const expBar = useRef(null)
+   const totalBar = useRef(null)
+
+   // 血條寬度計算
+   const getExpWidth = useCallback(async () => {
+      const totalWidth = window.getComputedStyle(totalBar.current).width
+
+      const newLv = Math.ceil(point / 50)
+      const prop = (point % 50) / 50
+
+      if (prop === 0) {
+         expBar.current.style.width = '0px'
+      }
+      expBar.current.style.width = totalWidth.slice(0, -2) * prop + 'px'
+      await setLv(newLv)
+   }, [])
+
+   useEffect(() => {
+      getExpWidth()
+   }, [])
+
    return (
       <>
          <div className="user-container">
@@ -98,9 +122,9 @@ export default function User() {
                      <img src={role} alt="" />
                   </div>
                   <div className="bar-container">
-                     <h4>Lv.1</h4>
-                     <div className="bar-outer">
-                        <div className="bar" />
+                     <h4>Lv.{lv}</h4>
+                     <div className="bar-outer" ref={totalBar}>
+                        <div className="bar" ref={expBar} />
                      </div>
                   </div>
                </div>
