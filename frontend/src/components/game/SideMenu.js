@@ -10,10 +10,10 @@ import url from '../../url.json'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { setMode } from '../../redux/counterSlice'
+import eventBus from '../../utils/EventBus'
 
 export default function SideMenu({ ws }) {
    const dispatch = useDispatch()
-   const monster = useSelector((state) => state.monster)
    const navigate = useNavigate()
    const [selectedModal, setSelectedModal] = useState(null)
    // const [activityData, setActivityData] = useState(null)
@@ -21,21 +21,13 @@ export default function SideMenu({ ws }) {
    const openModal = useCallback(async (modalKey, e) => {
       e.preventDefault()
       setSelectedModal(modalKey)
-      dispatch(
-         setMode({
-            ...monster,
-            mode: 'battle',
-         }),
-      )
+      localStorage.setItem('mode', 'battle')
+      eventBus.emit('monster-mode', 'battle')
    }, [])
 
    const closeModal = useCallback(async (e) => {
-      dispatch(
-         setMode({
-            ...monster,
-            mode: 'normal',
-         }),
-      )
+      localStorage.setItem('mode', 'normal')
+      eventBus.emit('monster-mode', 'normal')
       setSelectedModal(null)
    }, [])
 

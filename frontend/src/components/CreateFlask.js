@@ -39,10 +39,6 @@ export const CreateFlask = ({ open, onClose, ws }) => {
    }
    const [data, setData] = useState(nodeDefault)
 
-   useEffect(() => {
-      console.log(experiment)
-   }, [experiment])
-
    const onEditorStateChange = function (editorState) {
       setEditorState(editorState)
       let content = editorState.getCurrentContent().getPlainText('\u0001')
@@ -106,10 +102,6 @@ export const CreateFlask = ({ open, onClose, ws }) => {
          }
       }
    }
-
-   useEffect(() => {
-      console.log(point, experiment)
-   }, [point, experiment])
 
    return (
       <>

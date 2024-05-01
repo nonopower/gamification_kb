@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import eventBus from '../utils/EventBus'
 
 // monster array
 export const monsterArr = [
@@ -34,7 +35,15 @@ export const pointSlice = createSlice({
    name: 'point',
    initialState: 0,
    reducers: {
-      setPoint: (state, action) => state + action.payload,
+      setPoint: (state, action) => {
+         const point = state % 5
+         const blood = +localStorage.getItem('blood')
+         if (point + action.payload >= 5 && blood > 0) {
+            localStorage.setItem('blood', blood - 1)
+            eventBus.emit('monster-blood')
+         }
+         return state + action.payload
+      },
    },
 })
 

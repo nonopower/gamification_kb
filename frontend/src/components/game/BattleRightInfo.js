@@ -1,58 +1,42 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import CompareArrowsSharpIcon from '@mui/icons-material/CompareArrowsSharp'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-   setBlood,
-   monsterArr,
-   setOtherMonster,
-} from './../../redux/counterSlice'
+import { monsterArr } from './../../redux/counterSlice'
+import { setNextMonster } from '../../utils/monster'
+import eventBus from '../../utils/EventBus'
 
 export default function BattleRightInfo() {
    const dispatch = useDispatch()
-   const monster = useSelector((state) => state.monster)
    const point = useSelector((state) => state.point)
-   const [nowMonsterTotalBlood, setNowMonsterTotalBlood] = useState(0)
    const [nowMonsterImg, setNowMonsterImg] = useState('')
 
-   // 設定目前在打的怪
-   // 要從 API 獲取
+   // 設定第一隻 or 在打的怪
    useEffect(() => {
       try {
-         dispatch(
-            setOtherMonster({
-               name: monsterArr[0].name,
-               blood: monsterArr[0].blood,
-               mode: 'normal',
-            }),
-         )
+         if (!localStorage.getItem('monster')) {
+            try {
+               localStorage.setItem('monster', monsterArr[0].name)
+               localStorage.setItem('blood', monsterArr[0].blood)
+               localStorage.setItem('totalBlood', monsterArr[0].blood)
+               localStorage.setItem('mode', 'normal')
+            } finally {
+               setNowMonsterImg(monsterArr[0].img + '1.png')
+               getBloodWidth()
+            }
+         }
+         if (localStorage.getItem('monster')) {
+            const nowMonster = localStorage.getItem('monster')
+            const nowIndex = monsterArr.findIndex(
+               (item) => item.name === nowMonster,
+            )
+            localStorage.setItem('totalBlood', monsterArr[nowIndex].blood)
+            setNowMonsterImg(monsterArr[nowIndex].img + '1.png')
+            getBloodWidth()
+         }
       } finally {
-         setNowMonsterTotalBlood(monsterArr[0].blood)
-         setNowMonsterImg(monsterArr[0].img + '1.png')
-         getBloodWidth()
+         eventBus.emit('loading', false)
       }
    }, [])
-
-   // 顯示下一隻怪
-   const setNextMonster = () => {
-      try {
-         const next =
-            monsterArr.findIndex((item) => item.name === monster.name) + 1
-         if (next > monsterArr.length) return false
-
-         setNowMonsterImg(monsterArr[next].img)
-         setNowMonsterTotalBlood(monsterArr[next].blood)
-
-         dispatch(
-            setOtherMonster({
-               name: monsterArr[next].name,
-               blood: monsterArr[next].blood,
-               mode: 'normal',
-            }),
-         )
-      } finally {
-         getBloodWidth()
-      }
-   }
 
    // 倒數回血計時器，5 分鐘開始回血
    const [seconds, setSeconds] = useState(0)
@@ -60,50 +44,30 @@ export default function BattleRightInfo() {
    const [addBloodSec, setAddBloodSec] = useState(0)
 
    const addBlood = () => {
+      const nowBlood = +localStorage.getItem('blood')
+      const totalBlood = +localStorage.getItem('totalBlood')
       try {
-         const newBlood = monster.blood++
-         dispatch(
-            setBlood({
-               ...monster,
-               blood: newBlood,
-            }),
-         )
+         if (nowBlood + 1 <= totalBlood) {
+            localStorage.setItem('blood', nowBlood + 1)
+         } else {
+            return false
+         }
       } finally {
          getBloodWidth()
       }
    }
-   const subtractBlood = () => {
-      try {
-         const newBlood = monster.blood--
-         dispatch(
-            setBlood({
-               ...monster,
-               blood: newBlood,
-            }),
-         )
-      } finally {
-         getBloodWidth()
-      }
-   }
-
-   // 監聽點數
-   useEffect(() => {
-      console.log('point:' + point)
-      if (monster.blood && monster.blood > 0 && point / 5 === 0) {
-         console.log(1)
-         subtractBlood()
-      }
-   }, [point])
 
    let addBloodIntervalIdRef = useRef(null)
    const addBloodInterval = useCallback(() => {
+      const blood = +localStorage.getItem('blood')
+      const totalBlood = +localStorage.getItem('totalBlood')
       addBloodIntervalIdRef.current = setInterval(() => {
          setAddBloodSec((prevSeconds) => {
             if (prevSeconds === 3) {
                addBlood()
                return 0
             }
-            if (monster.blood === nowMonsterTotalBlood) {
+            if (blood === totalBlood) {
                clearInterval(addBloodIntervalIdRef.current)
             }
             return prevSeconds + 1
@@ -124,33 +88,27 @@ export default function BattleRightInfo() {
       }, 1000)
    }, [])
 
-   // 監聽怪物模式，觸發對應操作
+   // 監聽怪物模式，觸發換圖、回血
    useEffect(() => {
-      if (
-         monster.blood &&
-         monster.mode === 'normal' &&
-         monster.blood < nowMonsterTotalBlood
-      ) {
-         // 計時五分鐘
-         fiveminsInterval().then(() => {
-            // 開始加血
-            addBloodInterval()
-         })
-      } else {
-         clearInterval(fiveminsIntervalIdRef.current)
-         clearInterval(addBloodIntervalIdRef.current)
-         setSeconds(0)
-         setAddBloodSec(0)
-      }
-   }, [monster.mode])
+      fiveminsInterval().then(() => {
+         addBloodInterval()
+      })
 
-   useEffect(() => {
-      if (monster.mode === 'normal') {
-         setNowMonsterImg(monsterArr[0].img + '1.png')
-      } else {
-         setNowMonsterImg(monsterArr[0].img + '2.gif')
-      }
-   }, [monster.mode])
+      eventBus.on('monster-mode', (mode) => {
+         if (mode === 'normal') {
+            setNowMonsterImg(monsterArr[0].img + '1.png')
+            fiveminsInterval().then(() => {
+               addBloodInterval()
+            })
+         } else {
+            setNowMonsterImg(monsterArr[0].img + '2.gif')
+            clearInterval(fiveminsIntervalIdRef.current)
+            clearInterval(addBloodIntervalIdRef.current)
+            setSeconds(0)
+            setAddBloodSec(0)
+         }
+      })
+   }, [])
 
    const bloodBar = useRef(null)
    const totalBar = useRef(null)
@@ -159,18 +117,25 @@ export default function BattleRightInfo() {
    const getBloodWidth = useCallback(() => {
       const totalWidth = window.getComputedStyle(totalBar.current).width
 
-      const prop = monster.blood / nowMonsterTotalBlood
-      if (monster.blood === nowMonsterTotalBlood) {
+      const nowBlood = +localStorage.getItem('blood')
+      const totalBlood = +localStorage.getItem('totalBlood')
+      const prop = nowBlood / totalBlood
+
+      if (nowBlood === totalBlood) {
          bloodBar.current.style.width = totalWidth + 'px'
       }
+
       bloodBar.current.style.width = totalWidth.slice(0, -2) * prop + 'px'
    }, [])
 
+   // 監聽怪物血量，觸發血條長度變化
    useEffect(() => {
-      console.log('blood:' + monster.blood)
-      if (monster.blood && monster.blood === 0) setNextMonster()
-      getBloodWidth()
-   }, [monster.blood])
+      eventBus.on('monster-blood', () => {
+         const blood = +localStorage.getItem('blood')
+         if (blood === 0) setNextMonster()
+         getBloodWidth()
+      })
+   }, [])
 
    return (
       <>
@@ -182,10 +147,10 @@ export default function BattleRightInfo() {
                />
             </div>
             <div className="monster-container">
-               <img src={nowMonsterImg} alt={monster.name} />
+               <img src={nowMonsterImg} alt={localStorage.getItem('monster')} />
             </div>
             <div className="bar-container">
-               <h4>{monster.name}</h4>
+               <h4>{localStorage.getItem('monster')}</h4>
                <div className="bar-outer" ref={totalBar}>
                   <div className="bar" ref={bloodBar} />
                </div>

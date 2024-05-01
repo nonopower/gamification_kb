@@ -81,10 +81,6 @@ export const CreateIdea = ({ open, onClose, ws }) => {
    const point = useSelector((state) => state.point)
    const dispatch = useDispatch()
 
-   useEffect(() => {
-      console.log(idea)
-   }, [idea])
-
    const nodeDefault = {
       title: '',
       content: '',

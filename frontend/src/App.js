@@ -20,10 +20,22 @@ import Forum from './pages/Forum'
 import Dashboard from './pages/Dashboard'
 import PrepareLessons from './pages/teacher/PrepareLessons'
 import { RequireAuth } from 'react-auth-kit'
+import './assets/game/loading.scss'
+import Loading from './components/game/loading'
+import eventBus from './utils/EventBus'
+import { useEffect, useState } from 'react'
 
 export default function App() {
+   const [status, setStatus] = useState(false)
+   useEffect(() => {
+      eventBus.on('loading', (status) => {
+         setStatus(status)
+      })
+   }, [])
+
    return (
       <Router className="App">
+         {status && <Loading />}
          <Routes>
             <Route path="/" element={[<Home />, <About />, <Footer />]}></Route>
             <Route path="/about" element={<About />}></Route>

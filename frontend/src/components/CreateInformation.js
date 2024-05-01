@@ -26,10 +26,6 @@ export const CreateInformation = ({ open, onClose, ws }) => {
    const point = useSelector((state) => state.point)
    const dispatch = useDispatch()
 
-   useEffect(() => {
-      console.log(info)
-   }, [info])
-
    const name = localStorage.getItem('name')
    const [editorState, setEditorState] = useState(EditorState.createEmpty())
    const [loading, setLoading] = useState(false)
