@@ -11,9 +11,14 @@ import io from 'socket.io-client'
 import Graph from 'react-vis-network-graph'
 import { options } from './../../utils/battle-tools'
 import { ViewNode } from './../../components/ViewNode'
+import { useDispatch, useSelector } from 'react-redux'
+import { setPoint } from '../../redux/counterSlice'
 
 export default function Battle() {
    // user 點數紀錄
+   const point = useSelector((state) => state.point)
+   const dispatch = useDispatch()
+
    const [open, setOpen] = useState(false)
    const [nodeContent, setNodeContent] = useState(null)
    const [ws, setSocket] = useState(null)
@@ -24,7 +29,10 @@ export default function Battle() {
 
    const events = {
       click: (event) => {
-         // 閱讀想法幾則
+         // 閱讀
+         dispatch(setPoint(1))
+         const read = +localStorage.getItem('read')
+         localStorage.setItem('read', read + 1)
          if (event.nodes.length === 1) {
             handleClickOpen(event.nodes[0])
             localStorage.setItem('nodeId', event.nodes[0])

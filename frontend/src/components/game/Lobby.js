@@ -4,27 +4,30 @@ import Ranking from './Ranking'
 import EventList from './EventList'
 import Avatar from './Avatar'
 import './lobby.scss'
+import axios from 'axios'
+import url from '../../url.json'
 
 export default function Lobby() {
-   const [seconds, setSeconds] = useState(0)
-   const name = localStorage.getItem('name')
+   const getGroupRanking = async () => {
+      const fetchData = async () => {
+         axios.get(
+            `${url.backendHost}api/nodes/all/ranking/${localStorage.getItem('groupId')}`,
+            {
+               headers: {
+                  authorization: 'Bearer JWT Token',
+               },
+            },
+         )
+      }
 
-   // 上線計時器
-   // let intervalId
+      // await fetchData().then((res) => {
+      //    console.log(fetchData)
+      // })
+   }
 
-   // useEffect(() => {
-   //    if (name && name !== '') {
-   //       intervalId = setInterval(() => {
-   //          setSeconds((prevSeconds) => prevSeconds + 1)
-   //       }, 1000)
-   //    }
-
-   //    return () => clearInterval(intervalId)
-   // }, [])
-
-   // useEffect(() => {
-   //    console.log(seconds)
-   // }, [seconds])
+   useEffect(() => {
+      getGroupRanking()
+   }, [])
 
    return (
       <>

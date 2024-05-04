@@ -9,9 +9,14 @@ import {
 } from 'chart.js'
 import { Radar } from 'react-chartjs-2'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { setOnline } from './../../redux/counterSlice'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Tooltip)
+
+var ONE_HOUR = 1000 * 60 * 60
+var ONE_MIN = 1000 * 60
+var ONE_SEC = 1000
 
 export default function User() {
    const [chartData, setChartData] = useState({ labels: [], datasets: [] })
@@ -19,21 +24,28 @@ export default function User() {
    const name = localStorage.getItem('name')
    const role = localStorage.getItem('role') + '1.png'
    const navigate = useNavigate()
+   const dispatch = useDispatch()
 
    // 想法
    const idea = useSelector((state) => state.idea)
    // 資訊
    const info = useSelector((state) => state.info)
-   // 回覆
-   const reply = useSelector((state) => state.reply)
    // 提問
    const ask = useSelector((state) => state.ask)
    // 紀錄
    const record = useSelector((state) => state.record)
    // 實驗
    const experiment = useSelector((state) => state.experiment)
+
    // point
    const point = useSelector((state) => state.point)
+
+   // read
+   const read = +localStorage.getItem('read')
+   // online
+   const online = useSelector((state) => state.online)
+   // 回覆
+   const reply = useSelector((state) => state.reply)
 
    const options = {
       scales: {
@@ -60,7 +72,32 @@ export default function User() {
       },
    }
 
+   const compareOnlineDuration = async () => {
+      const loginTime = new Date(localStorage.getItem('login'))
+      const now = new Date().getTime()
+
+      // 本次上線時長
+      let onlineDuration = now - loginTime
+      localStorage.setItem('thisTime', onlineDuration)
+
+      await checkMin(onlineDuration)
+   }
+
+   const checkMin = (onlineDuration) => {
+      const hours = Math.floor(onlineDuration / (1000 * 60 * 60))
+      const minutes = Math.floor(
+         (onlineDuration % (1000 * 60 * 60)) / (1000 * 60),
+      )
+      const seconds = Math.floor((onlineDuration % (1000 * 60)) / 1000)
+      localStorage.setItem(
+         'thisTime',
+         `this time：${hours} 小时 ${minutes} 分钟 ${seconds} 秒`,
+      )
+   }
+
    useEffect(() => {
+      compareOnlineDuration()
+
       setChartData(() => dataMode2)
    }, [])
 
@@ -84,11 +121,11 @@ export default function User() {
    const expBar = useRef(null)
    const totalBar = useRef(null)
 
-   // 血條寬度計算
+   // 經驗值寬度計算
    const getExpWidth = useCallback(async () => {
       const totalWidth = window.getComputedStyle(totalBar.current).width
 
-      const newLv = Math.ceil(point / 50)
+      const newLv = point === 0 ? 1 : Math.ceil(point / 50)
       const prop = (point % 50) / 50
 
       if (prop === 0) {

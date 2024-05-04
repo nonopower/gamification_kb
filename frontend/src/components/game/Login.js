@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './login.scss'
 import Stack from '@mui/material/Stack'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -55,6 +55,8 @@ export default function Login() {
             localStorage.setItem('name', response.data.name)
             localStorage.setItem('email', response.data.email)
             localStorage.setItem('role', response.data.imageContent)
+            localStorage.setItem('login', new Date().getTime())
+            if (!localStorage.getItem('read')) localStorage.setItem('read', 0)
 
             console.log('res: ', response.data)
             if (role === 'student') navigate('/game/lobby')
