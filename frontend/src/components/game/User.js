@@ -25,6 +25,8 @@ export default function User() {
    const role = localStorage.getItem('role') + '1.png'
    const navigate = useNavigate()
    const dispatch = useDispatch()
+   const gold = '/game/gold-medal.png'
+   const silver = '/game/silver-medal.png'
 
    // 想法
    const idea = useSelector((state) => state.idea)
@@ -42,8 +44,6 @@ export default function User() {
 
    // read
    const read = +localStorage.getItem('read')
-   // online
-   const online = useSelector((state) => state.online)
    // 回覆
    const reply = useSelector((state) => state.reply)
 
@@ -72,32 +72,7 @@ export default function User() {
       },
    }
 
-   const compareOnlineDuration = async () => {
-      const loginTime = new Date(localStorage.getItem('login'))
-      const now = new Date().getTime()
-
-      // 本次上線時長
-      let onlineDuration = now - loginTime
-      localStorage.setItem('thisTime', onlineDuration)
-
-      await checkMin(onlineDuration)
-   }
-
-   const checkMin = (onlineDuration) => {
-      const hours = Math.floor(onlineDuration / (1000 * 60 * 60))
-      const minutes = Math.floor(
-         (onlineDuration % (1000 * 60 * 60)) / (1000 * 60),
-      )
-      const seconds = Math.floor((onlineDuration % (1000 * 60)) / 1000)
-      localStorage.setItem(
-         'thisTime',
-         `this time：${hours} 小时 ${minutes} 分钟 ${seconds} 秒`,
-      )
-   }
-
    useEffect(() => {
-      compareOnlineDuration()
-
       setChartData(() => dataMode2)
    }, [])
 
@@ -139,6 +114,101 @@ export default function User() {
       getExpWidth()
    }, [])
 
+   const checkOnline = () => {
+      const online = localStorage.getItem('online')
+      checkMin(online)
+   }
+
+   const checkMin = (onlineDuration) => {
+      let leave1 = onlineDuration % (24 * 3600 * 1000)
+      let hours = Math.floor(leave1 / (3600 * 1000))
+      let leave2 = leave1 % (3600 * 1000)
+      let minutes = Math.floor(leave2 / (60 * 1000))
+
+      if (minutes >= 30) localStorage.setItem('silver30', 1)
+      if (hours >= 1) localStorage.setItem('goldhour', hours)
+   }
+
+   useEffect(() => {
+      checkOnline()
+   }, [])
+
+   const checkBadge = () => {
+      let returnDOM = []
+
+      if (read >= 5 && read < 10) {
+         returnDOM.push(
+            <div className="badge-item" key="silver-badge">
+               <img src={silver} alt="閱讀5則" />
+            </div>,
+         )
+      }
+
+      if (read >= 10) {
+         returnDOM.push(
+            <div className="badge-item" key="silver-badge">
+               <img src={silver} title="閱讀5則" />
+            </div>,
+         )
+
+         for (let i = 10; i <= read; i++) {
+            if (i % 10 === 0)
+               returnDOM.push(
+                  <div className="badge-item" key={`gold-badge-${i}`}>
+                     <img src={gold} title={`閱讀${i}則`} />
+                  </div>,
+               )
+         }
+      }
+
+      if (reply >= 5 && reply < 10) {
+         returnDOM.push(
+            <div className="badge-item" key="silver-reply-badge">
+               <img src={silver} title="回覆5則" />
+            </div>,
+         )
+      }
+
+      if (reply >= 10) {
+         returnDOM.push(
+            <div className="badge-item" key="silver-reply-badge">
+               <img src={silver} title="回覆5則" />
+            </div>,
+         )
+
+         for (let i = 10; i <= reply; i++) {
+            if (i % 10 === 0)
+               returnDOM.push(
+                  <div className="badge-item" key={`gold-reply-badge-${i}`}>
+                     <img src={gold} title={`回覆${i}則`} />
+                  </div>,
+               )
+         }
+      }
+
+      if (localStorage.getItem('silver30')) {
+         returnDOM.push(
+            <div className="badge-item" key="silver30-badge">
+               <img src={silver} title="上線30分鐘" />
+            </div>,
+         )
+      }
+
+      const oneHour = +localStorage.getItem('goldhour')
+
+      if (oneHour) {
+         for (let i = 1; i <= oneHour; i++) {
+            returnDOM.push(
+               <div className="badge-item" key={`goldhour-badge-${i}`}>
+                  <img src={gold} title={`上線${i}小時`} />
+               </div>,
+            )
+         }
+      }
+
+      return returnDOM
+   }
+
    return (
       <>
          <div className="user-container">
@@ -168,17 +238,7 @@ export default function User() {
                <div className="right-container">
                   <div className="badge-container">
                      <h3>擁有的徽章</h3>
-                     <div className="badge-area">
-                        <div className="badge-item">
-                           <img src="/game/gold-medal.png" alt="" />
-                        </div>
-                        <div className="badge-item">
-                           <img src="/game/gold-medal.png" alt="" />
-                        </div>
-                        <div className="badge-item">
-                           <img src="/game/gold-medal.png" alt="" />
-                        </div>
-                     </div>
+                     <div className="badge-area">{checkBadge()}</div>
                   </div>
                   <div className="skill-container">
                      <h3>角色能力</h3>

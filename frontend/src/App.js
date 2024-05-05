@@ -27,6 +27,7 @@ import { useEffect, useState } from 'react'
 
 export default function App() {
    const [status, setStatus] = useState(false)
+
    useEffect(() => {
       eventBus.on('loading', (status) => {
          setStatus(status)
