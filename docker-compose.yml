@@ -1,5 +1,11 @@
 version: "3"
 services:
+  socketserver:
+    build:
+      context: socket
+    ports:
+      - "56000:56000"
+
   backend:
     build:
       context: backend
@@ -77,3 +83,4 @@ volumes:
 networks:
   frontend:
   backend:
+  socketserver:
