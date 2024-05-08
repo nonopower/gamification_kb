@@ -26,7 +26,8 @@ exports.signup = async (req, res) => {
       password: await bcrypt.hash(password, 10),
       school,
       city,
-      imageContent
+      imageContent,
+      state: 0
     };
 
     //saving the user
@@ -187,6 +188,45 @@ exports.login = async (req, res) => {
     // console.log(error);
   }
 }
+
+exports.loginTime = async (req, res) => {
+  const id = req.body.id;
+  const loginTime = req.body.loginTime;
+
+  try {
+      const user = await User.findByPk(id);
+      if (user) {
+        user.loginTime = loginTime;
+          await user.save();
+
+          res.send({ message: "user logintime updated successfully." });
+      } else {
+          res.status(404).send({ message: "user not found." });
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "Error updating logintime." });
+  }
+};
+
+exports.updateUserState = async (req, res) => {
+  const id = req.body.id;
+  const state = req.body.state;
+  try {
+      const user = await User.findByPk(id);
+      if (user) {
+        user.state = state;
+          await user.save();
+
+          res.send({ message: "user state updated successfully." });
+      } else {
+          res.status(404).send({ message: "user not found." });
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "Error updating state." });
+  }
+};
 
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {

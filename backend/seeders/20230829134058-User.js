@@ -13,6 +13,8 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
         imageContent: '01.png',
+        loginTime: new Date(),
+        state: 0
       },
       {
         name: 'Jon Doe',
@@ -23,6 +25,8 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
         imageContent: '01.png',
+        loginTime: new Date(),
+        state: 0
       },
     ],
     {},

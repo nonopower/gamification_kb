@@ -16,6 +16,12 @@ module.exports = app => {
     // User login
     router.post('/login', bodyParser.json(), users.login )
   
+    // User Record Login Time
+    router.post('/loginTime', bodyParser.json(), users.loginTime )
+
+    // User change login state
+    router.post("/updateUserState", bodyParser.json(), users.updateUserState);
+  
     // Retrieve all Users
     router.get("/", users.findAll);
   

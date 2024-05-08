@@ -32,6 +32,16 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.STRING,
           defaultValue: 'default_image.png', // 默认值
           allowNull: true
+        },
+        loginTime: {
+          type: DataTypes.DATE,
+          defaultValue: 0,
+          allowNull: true
+        },
+        state: {
+          type: DataTypes.BIGINT,
+          defaultValue: 0,
+          allowNull: true
         }
     }, {timestamps: true}, );
 
