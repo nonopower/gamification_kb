@@ -160,3 +160,23 @@ exports.getGroupRanking = (req, res) => {
         });
     });
 }
+
+exports.getAllRank = async (req, res) => {
+    try {
+      const query = `
+        SELECT 
+            count("author") as score,
+            ROW_NUMBER() over(order by count("author") desc) as rank,
+            author
+        FROM "Nodes"
+        GROUP BY author
+        ORDER BY count("author") desc`;
+  
+      const nodeCounts = await db.sequelize.query(query, { type: db.sequelize.QueryTypes.SELECT });
+  
+      res.send(nodeCounts);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+};
+

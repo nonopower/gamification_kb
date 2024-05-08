@@ -16,6 +16,8 @@ module.exports = app => {
     // Get one node.
     router.get('/:id', nodes.findOneNode);
 
+    router.get('/', nodes.getAllRank);
+
     // Update one node.
     router.put('/:nodeId', nodes.updateNode);
 
