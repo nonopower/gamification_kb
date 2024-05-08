@@ -8,9 +8,12 @@ import axios from 'axios'
 import url from '../../url.json'
 
 export default function Lobby() {
+   const [teamRanking, setTeamRanking] = useState()
+   const [ranking, setRanking] = useState()
+
    const getGroupRanking = async () => {
-      const fetchData = async () => {
-         axios.get(
+      try {
+         const response = await axios.get(
             `${url.backendHost}api/nodes/all/ranking/${localStorage.getItem('groupId')}`,
             {
                headers: {
@@ -18,22 +21,46 @@ export default function Lobby() {
                },
             },
          )
+         setTeamRanking(response.data)
+      } catch (error) {
+         console.error(error)
       }
+   }
 
-      // await fetchData().then((res) => {
-      //    console.log(fetchData)
-      // })
+   const getRanking = async () => {
+      try {
+         const response = await axios.get(`${url.backendHost}api/nodes`, {
+            headers: {
+               authorization: 'Bearer JWT Token',
+            },
+         })
+         setRanking(response.data)
+      } catch (error) {
+         console.error(error)
+      }
    }
 
    useEffect(() => {
       getGroupRanking()
+      getRanking()
    }, [])
+
+   useEffect(() => {
+      if (ranking) {
+         const name = localStorage.getItem('name')
+         const myselfRank =
+            ranking.findIndex((item) => item.author === name) + 1
+         localStorage.setItem('rankingNumber', myselfRank)
+      }
+   }, [ranking])
 
    return (
       <>
          <div className="lobby-container">
             <EventList />
-            <Ranking />
+            {ranking && teamRanking && (
+               <Ranking teamRanking={teamRanking} allRanking={ranking} />
+            )}
             <Avatar />
          </div>
       </>

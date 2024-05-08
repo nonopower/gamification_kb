@@ -10,13 +10,25 @@ import {
 import { Radar } from 'react-chartjs-2'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { setOnline } from './../../redux/counterSlice'
+import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar'
+import SnackbarContent from '@mui/material/SnackbarContent'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Tooltip)
 
 var ONE_HOUR = 1000 * 60 * 60
 var ONE_MIN = 1000 * 60
 var ONE_SEC = 1000
+
+const Badge = (type, message) => {
+   const gold = '/game/gold-medal.png'
+   const silver = '/game/silver-medal.png'
+
+   return (
+      <div className="badge-item">
+         <img src={type === 'silver' ? silver : gold} alt={message} />
+      </div>
+   )
+}
 
 export default function User() {
    const [chartData, setChartData] = useState({ labels: [], datasets: [] })
@@ -133,12 +145,24 @@ export default function User() {
       checkOnline()
    }, [])
 
+   const [open, setOpen] = React.useState(false)
+   const [message, setMessage] = useState()
+
+   const clickBadge = useCallback((msg) => {
+      setOpen(true)
+      setMessage(msg)
+   }, [])
+
    const checkBadge = () => {
       let returnDOM = []
 
       if (read >= 5 && read < 10) {
          returnDOM.push(
-            <div className="badge-item" key="silver-badge">
+            <div
+               className="badge-item"
+               key="silver-badge"
+               onClick={() => clickBadge('閱讀5則')}
+            >
                <img src={silver} alt="閱讀5則" />
             </div>,
          )
@@ -146,7 +170,11 @@ export default function User() {
 
       if (read >= 10) {
          returnDOM.push(
-            <div className="badge-item" key="silver-badge">
+            <div
+               className="badge-item"
+               key="silver-badge"
+               onClick={() => clickBadge('閱讀5則')}
+            >
                <img src={silver} title="閱讀5則" />
             </div>,
          )
@@ -154,7 +182,11 @@ export default function User() {
          for (let i = 10; i <= read; i++) {
             if (i % 10 === 0)
                returnDOM.push(
-                  <div className="badge-item" key={`gold-badge-${i}`}>
+                  <div
+                     className="badge-item"
+                     key={`gold-badge-${i}`}
+                     onClick={() => clickBadge(`閱讀${i}則`)}
+                  >
                      <img src={gold} title={`閱讀${i}則`} />
                   </div>,
                )
@@ -163,7 +195,11 @@ export default function User() {
 
       if (reply >= 5 && reply < 10) {
          returnDOM.push(
-            <div className="badge-item" key="silver-reply-badge">
+            <div
+               className="badge-item"
+               key="silver-reply-badge"
+               onClick={() => clickBadge('回覆5則')}
+            >
                <img src={silver} title="回覆5則" />
             </div>,
          )
@@ -171,7 +207,11 @@ export default function User() {
 
       if (reply >= 10) {
          returnDOM.push(
-            <div className="badge-item" key="silver-reply-badge">
+            <div
+               className="badge-item"
+               key="silver-reply-badge"
+               onClick={() => clickBadge('回覆5則')}
+            >
                <img src={silver} title="回覆5則" />
             </div>,
          )
@@ -179,7 +219,11 @@ export default function User() {
          for (let i = 10; i <= reply; i++) {
             if (i % 10 === 0)
                returnDOM.push(
-                  <div className="badge-item" key={`gold-reply-badge-${i}`}>
+                  <div
+                     className="badge-item"
+                     key={`gold-reply-badge-${i}`}
+                     onClick={() => clickBadge(`回覆${i}則`)}
+                  >
                      <img src={gold} title={`回覆${i}則`} />
                   </div>,
                )
@@ -188,7 +232,11 @@ export default function User() {
 
       if (localStorage.getItem('silver30')) {
          returnDOM.push(
-            <div className="badge-item" key="silver30-badge">
+            <div
+               className="badge-item"
+               key="silver30-badge"
+               onClick={() => clickBadge('上線30分鐘')}
+            >
                <img src={silver} title="上線30分鐘" />
             </div>,
          )
@@ -199,7 +247,11 @@ export default function User() {
       if (oneHour) {
          for (let i = 1; i <= oneHour; i++) {
             returnDOM.push(
-               <div className="badge-item" key={`goldhour-badge-${i}`}>
+               <div
+                  className="badge-item"
+                  key={`goldhour-badge-${i}`}
+                  onClick={() => clickBadge(`上線${i}小時`)}
+               >
                   <img src={gold} title={`上線${i}小時`} />
                </div>,
             )
@@ -211,6 +263,14 @@ export default function User() {
 
    return (
       <>
+         <Snackbar
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            open={open}
+            onClose={() => setOpen(false)}
+            message={message}
+            autoHideDuration={1500}
+            key={'snack'}
+         />
          <div className="user-container">
             <div className="info-container">
                <div className="left-container">
@@ -223,7 +283,9 @@ export default function User() {
                         <span>冒險家</span>
                         {name}
                      </h3>
-                     <h4>（排行榜第25名）</h4>
+                     <h4>
+                        （排行榜第 {localStorage.getItem('rankingNumber')} 名）
+                     </h4>
                   </div>
                   <div className="avatar">
                      <img src={role} alt="" />

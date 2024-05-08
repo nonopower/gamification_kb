@@ -146,6 +146,28 @@ export default function Battle() {
       fetchData()
    }, [fetchGroupData, fetchNodeData])
 
+   // online
+   // const host = 'http://111.184.127.25:56000'
+   // const queryParams = { userId: 100 }
+   // const socket = io(host, {
+   //    path: '/pathToConnection',
+   //    transports: ['websocket'],
+   //    upgrade: false,
+   //    query: queryParams,
+   //    reconnection: false,
+   //    rejectUnauthorized: false,
+   // })
+
+   // socket.once('connect', () => {
+   //    socket.on('online', (userId) => {
+   //       console.log(userId, 'Is Online!')
+   //    })
+
+   //    socket.on('offline', (userId) => {
+   //       console.log(userId, 'Is Offline!')
+   //    })
+   // })
+
    return (
       <>
          <div className="battle-container">
