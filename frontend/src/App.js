@@ -23,7 +23,7 @@ import { RequireAuth } from 'react-auth-kit'
 import './assets/game/loading.scss'
 import Loading from './components/game/loading'
 import eventBus from './utils/EventBus'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function App() {
    const [status, setStatus] = useState(false)
