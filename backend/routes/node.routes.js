@@ -11,7 +11,7 @@ module.exports = app => {
     router.get('/all/:groupId', nodes.findAllNode);
 
     // Find all user scores in group.
-    router.get('/all/ranking/:groupId/', nodes.getGroupRanking);
+    router.get('/all/ranking/group', nodes.getGroupRanking);
 
     // Get one node.
     router.get('/:id', nodes.findOneNode);

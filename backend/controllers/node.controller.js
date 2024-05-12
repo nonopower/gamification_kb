@@ -115,50 +115,24 @@ exports.updateNode = (req, res) => {
     });
 }
 
-exports.getGroupRanking = (req, res) => {
-    const groupId = req.params.groupId;
-
-    Group.findAll({
-        where: {
-            id: groupId
-        },
-        include: [{
-            model: Node,
-            through: { attributes: [] }
-        }],
-        
-    })
-    .then(data => {
-        if (data) {
-            const authorScores = {};
-            data.forEach(group => {
-                group.Nodes.forEach(node => {
-                    const author = node.author;
-                    if (authorScores[author]) {
-                        authorScores[author]++;
-                    } else {
-                        authorScores[author] = 1;
-                    }
-                });
-            });
-            const result = Object.keys(authorScores).map(author => ({
-                score: authorScores[author],
-                author: author,
-                groupId: data[0].id
-            }));
-            res.send(result);
-        } else {
-          res.status(404).send({
-            message: `Cannot find group with id=${groupId}.`
-          });
-        }
-    })
-    .catch(err => {
-        res.status(500).send({
-          message: 
-            err.message || "Error retrieving group with id=" + groupId,
-        });
-    });
+exports.getGroupRanking = async (req, res) => {
+    try {
+        const query = `
+        SELECT "activityId", title, a."GroupId", "groupName" as author, count("NodeId") as score, ROW_NUMBER() over(order by count("NodeId") desc) as rank
+        FROM "GroupNodes" as a
+        INNER JOIN "Groups" as b ON a."GroupId" = b."id"
+        INNER JOIN "ActivityGroups" as c ON b."id" = c."GroupId"
+        INNER JOIN "Activities" as d ON c."ActivityId" = d.id
+        GROUP BY "activityId", title, a."GroupId", "groupName"
+        ORDER BY count("NodeId") desc
+        `;
+    
+        const nodeCounts = await db.sequelize.query(query, { type: db.sequelize.QueryTypes.SELECT });
+    
+        res.send(nodeCounts);
+      } catch (error) {
+        res.status(500).json(error);
+      }
 }
 
 exports.getAllRank = async (req, res) => {

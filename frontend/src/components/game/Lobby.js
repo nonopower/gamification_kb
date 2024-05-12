@@ -14,7 +14,7 @@ export default function Lobby() {
    const getGroupRanking = async () => {
       try {
          const response = await axios.get(
-            `${url.backendHost}api/nodes/all/ranking/${localStorage.getItem('groupId')}`,
+            `${url.backendHost}api/nodes/all/ranking/group`,
             {
                headers: {
                   authorization: 'Bearer JWT Token',

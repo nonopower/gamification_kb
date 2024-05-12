@@ -16,7 +16,7 @@ export default function RankingItem({ ranking }) {
                            <h3>{index + 1}</h3>
                         )}
                      </div>
-                     <div className="name">{item.author}</div>
+                     <div className="name">{item.author+(typeof item.title !== 'undefined' ? '-' + item.title : '')}</div>
                   </div>
                )
             })}
