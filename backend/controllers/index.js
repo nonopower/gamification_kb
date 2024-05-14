@@ -8,6 +8,8 @@ const Node = require('./node.controller');
 const Edge = require('./edge.controller');
 const Radar = require('./radar.controller');
 const Boss = require('./boss.controller');
+const Pet = require('./pet.controller');
+const BackPack = require('./backPack.controller');
 
 module.exports = {
   User,
@@ -19,5 +21,7 @@ module.exports = {
   Node,
   Edge,
   Radar,
-  Boss
+  Boss,
+  Pet,
+  BackPack
 };
