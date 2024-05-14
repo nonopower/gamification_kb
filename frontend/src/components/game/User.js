@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar'
 import SnackbarContent from '@mui/material/SnackbarContent'
+import Common from './Common'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Tooltip)
 
@@ -89,7 +90,7 @@ export default function User() {
    }, [])
 
    const dataMode2 = {
-      labels: ['想法', '回覆', '提問', '紀錄', '實驗', '資訊'],
+      labels: ['想法產生', '多元想法', '想法改進', '闡述', '貢獻', '資訊提供'],
       datasets: [
          {
             data: [idea, reply, ask, record, experiment, info],
@@ -273,11 +274,12 @@ export default function User() {
          />
          <div className="user-container">
             <div className="info-container">
+               <Common />
                <div className="left-container">
-                  <a href="" className="back" onClick={back}>
+                  {/* <a href="" className="back" onClick={back}>
                      <img src="/game/house.png" alt="" />
                      <p>返回</p>
-                  </a>
+                  </a> */}
                   <div className="text-container">
                      <h3 className="username">
                         <span>冒險家</span>
@@ -304,7 +306,9 @@ export default function User() {
                   </div>
                   <div className="skill-container">
                      <h3>角色能力</h3>
-                     <Radar data={chartData} options={options} />
+                     <div className="chart-rader">
+                        <Radar data={chartData} options={options} />
+                     </div>
                   </div>
                </div>
             </div>

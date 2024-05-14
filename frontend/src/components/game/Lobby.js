@@ -6,6 +6,7 @@ import Avatar from './Avatar'
 import './lobby.scss'
 import axios from 'axios'
 import url from '../../url.json'
+import Common from './Common'
 
 export default function Lobby() {
    const [teamRanking, setTeamRanking] = useState()
@@ -57,6 +58,7 @@ export default function Lobby() {
    return (
       <>
          <div className="lobby-container">
+            <Common />
             <EventList />
             {ranking && teamRanking && (
                <Ranking teamRanking={teamRanking} allRanking={ranking} />

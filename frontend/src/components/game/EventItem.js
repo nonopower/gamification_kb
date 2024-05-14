@@ -8,6 +8,7 @@ export default function EventItem({ activity }) {
       e.preventDefault()
 
       localStorage.setItem('activityId', activity.id)
+      localStorage.setItem('activityName', activity.title)
       navigate('/game/battle-lobby')
    }
 

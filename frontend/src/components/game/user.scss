@@ -80,7 +80,11 @@
          }
 
          .avatar {
-            height: 50%;
+            height: 30%;
+            img {
+               height: 100%;
+               width: auto;
+            }
          }
       }
       .right-container {
@@ -107,6 +111,11 @@
          .skill-container {
             width: 100%;
             height: 100%;
+
+            .chart-rader {
+               width: 80%;
+               height: auto;
+            }
          }
       }
    }

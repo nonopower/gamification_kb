@@ -3,6 +3,9 @@
    height: 100%;
    display: flex;
    position: relative;
+   background-image: url('../../assets/game/blur_bg.jpg');
+   background-size: cover;
+   overflow: hidden;
 
    .side-menu {
       width: 10%;
@@ -106,8 +109,30 @@
    }
 
    .center {
-      width: 100%;
+      width: 90%;
       height: 100%;
+      flex: 1;
+      overflow: auto;
+      position: fixed;
+      top: 0;
+      left: 10%;
+
+      .title {
+         width: 65%;
+         position: absolute;
+         z-index: 1;
+
+         .common-container {
+            position: relative;
+         }
+
+         h1 {
+            color: #311b1b;
+            font-size: 65px;
+            margin-left: 20px;
+            margin-top: -20px;
+         }
+      }
    }
 
    .battle-right-info {
@@ -121,7 +146,7 @@
       text-align: center;
       padding: 20px;
       right: 20px;
-      bottom: 20px;
+      top: 20px;
 
       .bar-container {
          color: #fff;
