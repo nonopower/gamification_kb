@@ -1,0 +1,68 @@
+.mask-dark {
+   position: fixed;
+   width: 100vw;
+   height: 100vh;
+   background-color: #000000d9;
+   left: 0;
+   top: 0;
+   z-index: 1;
+
+   .bag-container {
+      display: flex;
+      width: 40%;
+      height: 70%;
+      overflow: hidden;
+      background-color: #ffe882;
+      position: relative;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 20px;
+      border: 20px solid #cc8f41;
+      text-align: center;
+      flex-direction: column;
+
+      h1 {
+         color: #804d0b;
+         font-size: 40px;
+         margin: 15px 0;
+      }
+
+      .monster-area {
+         padding: 20px;
+         height: 100%;
+         width: 100%;
+         overflow-y: auto;
+
+         .monster-item {
+            background-color: #eeb56c;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            padding: 10%;
+            width: 100%;
+
+            img {
+               width: 100%;
+               height: auto;
+            }
+         }
+
+         .monster-item:last-child {
+            margin-bottom: 0;
+         }
+      }
+   }
+   button {
+      background-color: #b62525;
+      color: #fff;
+      border: 0;
+      width: 20%;
+      padding: 15px;
+      font-size: 30px;
+      position: absolute;
+      border-radius: 15px;
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+   }
+}

@@ -191,3 +191,16 @@
       }
    }
 }
+
+.bag-button {
+   position: absolute;
+   right: 28%;
+   top: 20px;
+   width: 80px;
+   cursor: pointer;
+
+   img {
+      width: 100%;
+      height: auto;
+   }
+}

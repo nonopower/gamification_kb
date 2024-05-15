@@ -13,6 +13,8 @@ import { ViewNode } from './../../components/ViewNode'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPoint } from '../../redux/counterSlice'
 import Common from './Common'
+import Bag from './Bag'
+import eventBus from '../../utils/EventBus'
 
 export default function Battle() {
    // user 點數紀錄
@@ -362,6 +364,15 @@ export default function Battle() {
       fetchData()
    }, [fetchGroupData, fetchNodeData])
 
+   const [openBag, setOpenBag] = useState(false)
+
+   useEffect(() => {
+      eventBus.on('bag-status', (status) => {
+         setOpenBag(status)
+         window.location.reload(false)
+      })
+   }, [])
+
    return (
       <>
          <div className="battle-container">
@@ -381,6 +392,7 @@ export default function Battle() {
             nodeContent={nodeContent}
             ws={ws}
          />
+         {openBag ?? <Bag />}
       </>
    )
 }

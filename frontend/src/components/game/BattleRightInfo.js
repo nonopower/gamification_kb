@@ -141,6 +141,11 @@ export default function BattleRightInfo() {
       })
    }, [])
 
+   const onClickBag = (e) => {
+      e.preventDefault()
+      eventBus.emit('bag-status', true)
+   }
+
    return (
       <>
          <div className="battle-right-info">
@@ -160,6 +165,9 @@ export default function BattleRightInfo() {
                </div>
             </div>
          </div>
+         <a href="/" className="bag-button" onClick={onClickBag}>
+            <img src="/game/backpack.png" alt="" />
+         </a>
       </>
    )
 }
