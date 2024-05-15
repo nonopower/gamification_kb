@@ -91,8 +91,10 @@ export const CreateQuestion = ({ open, onClose, ws }) => {
       }
       setLoading(true)
       try {
-         await newNode(ideaData, localStorage.getItem('activityId'), ws)
+         await newNode(ideaData, sessionStorage.getItem('activityId'), ws)
          await updateRadar()
+         window.location.reload(false)
+         alert('新增成功')
          onClose(onClose)
          setLoading(false)
          setData(nodeDefault)

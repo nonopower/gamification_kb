@@ -134,7 +134,6 @@ export const CreateReply = ({ open, onClose, nodeContent, ws }) => {
             localStorage.getItem('activityId'),
             ws,
          )
-         await updateRadar()
          // console.log(`CreateIdea:responseFromPostNode.data: ${responseFromPostNode.data}`)
          const edgeData = {
             groupId: localStorage.getItem('groupId'),
@@ -146,8 +145,11 @@ export const CreateReply = ({ open, onClose, nodeContent, ws }) => {
             localStorage.getItem('activityId'),
             ws,
          )
+         window.location.reload(false)
+         alert('回覆成功')
 
          //
+         await updateRadar()
          onClose(onClose)
          setLoading(false)
          setData(nodeDefault)
