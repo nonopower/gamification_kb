@@ -14,8 +14,6 @@ export default function Common() {
    const location = useLocation()
    const pathname = location.pathname
 
-   console.log(pathname)
-
    const logout = () => {
       singOut()
       navigate('/game')

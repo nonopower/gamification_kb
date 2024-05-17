@@ -369,7 +369,7 @@ export default function Battle() {
    useEffect(() => {
       eventBus.on('bag-status', (status) => {
          setOpenBag(status)
-         window.location.reload(false)
+         // window.location.reload(false)
       })
    }, [])
 
@@ -392,7 +392,8 @@ export default function Battle() {
             nodeContent={nodeContent}
             ws={ws}
          />
-         {openBag ?? <Bag />}
+         {/* <Bag /> */}
+         {openBag ? <Bag /> : <></>}
       </>
    )
 }
