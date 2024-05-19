@@ -9,7 +9,7 @@ module.exports = app => {
 
     router.post("/insertPet", bodyParser.json(), pet.insertPet);
 
-    router.get("/getCurrentPet", bodyParser.json(), pet.getPet);
+    router.post("/getCurrentPet", bodyParser.json(), pet.getPet);
 
     app.use('/api/pet', router);
 }
