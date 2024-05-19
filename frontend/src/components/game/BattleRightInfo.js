@@ -4,11 +4,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { monsterArr } from './../../redux/counterSlice'
 import { setNextMonster } from '../../utils/monster'
 import eventBus from '../../utils/EventBus'
+import axios from 'axios'
+import url from '../../url.json'
 
 export default function BattleRightInfo() {
+   const groupId = localStorage.getItem('groupId')
+   const activityId = localStorage.getItem('activityId')
    const dispatch = useDispatch()
    const point = useSelector((state) => state.point)
    const [nowMonsterImg, setNowMonsterImg] = useState('')
+   const role = localStorage.getItem('role') + '2.gif'
 
    // 設定第一隻 or 在打的怪
    useEffect(() => {
@@ -141,10 +146,40 @@ export default function BattleRightInfo() {
       })
    }, [])
 
+   /**
+    *
+    *
+    * 新邏輯
+    *
+    *
+    */
+
+   const [pet, setPet] = useState()
+
+   const getPet = async () => {
+      try {
+         const response = await axios
+            .post(`${url.backendHost}api/pet/getCurrentPet`, {
+               groupId,
+               activityId,
+            })
+            .then((response) => {
+               console.log(response)
+               setPet(response.data.petNumber)
+            })
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
    const onClickBag = (e) => {
       e.preventDefault()
       eventBus.emit('bag-status', true)
    }
+
+   useEffect(() => {
+      getPet()
+   }, [])
 
    return (
       <>
@@ -155,11 +190,29 @@ export default function BattleRightInfo() {
                   fontSize={'large'}
                />
             </div>
-            <div className="monster-container">
-               <img src={nowMonsterImg} alt={localStorage.getItem('monster')} />
+            <div className="img-container">
+               <div className="team">
+                  <div className="other">
+                     <div className="people">
+                        <img src="/game/role/m_blue_2.gif" alt="" />
+                     </div>
+                     <div className="people">
+                        <img src="/game/role/bird_2.gif" alt="" />
+                     </div>
+                     <div className="people">
+                        <img src="/game/role/w_leather_2.gif" alt="" />
+                     </div>
+                  </div>
+                  <div className="user">
+                     <img src={role} alt="" />
+                  </div>
+               </div>
+               <div className="monster">
+                  <img src={`/game/new_monster/${pet}`} />
+               </div>
             </div>
             <div className="bar-container">
-               <h4>{localStorage.getItem('monster')}</h4>
+               {/* <h4>{localStorage.getItem('monster')}</h4> */}
                <div className="bar-outer" ref={totalBar}>
                   <div className="bar" ref={bloodBar} />
                </div>

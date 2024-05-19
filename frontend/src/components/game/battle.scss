@@ -136,7 +136,7 @@
    }
 
    .battle-right-info {
-      width: 25%;
+      max-width: 40%;
       height: 35%;
       display: flex;
       flex-direction: column;
@@ -173,7 +173,7 @@
                height: 100%;
                width: 100%;
                border-radius: 10px;
-               background-color: #b61010;
+               background-color: #ffc21b;
             }
          }
       }
@@ -183,10 +183,33 @@
          cursor: pointer;
       }
 
-      .monster-container {
+      .img-container {
          height: 70%;
-         img {
-            height: 100%;
+         margin-bottom: 20px;
+         display: flex;
+
+         .team {
+            display: flex;
+
+            .other {
+               width: 20%;
+            }
+            .user {
+               width: 80%;
+               height: 100%;
+
+               img {
+                  width: auto;
+                  height: 100%;
+               }
+            }
+         }
+         .monster {
+            width: 100%;
+            img {
+               width: 100%;
+               max-height: 100%;
+            }
          }
       }
    }
@@ -194,8 +217,8 @@
 
 .bag-button {
    position: absolute;
-   right: 28%;
-   top: 20px;
+   right: 20px;
+   top: 40%;
    width: 80px;
    cursor: pointer;
 

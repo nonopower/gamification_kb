@@ -1,18 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import NotificationsIcon from '@mui/icons-material/Notifications'
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom'
-import ArrowCircleLeftTwoToneIcon from '@mui/icons-material/ArrowCircleLeftTwoTone'
+import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded'
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
 import { Stack } from '@mui/material'
 import './common.scss'
 import { useSignOut } from 'react-auth-kit'
 import { useLocation } from 'react-router-dom'
+import axios from 'axios'
+import url from '../../url.json'
 
 export default function Common() {
    const navigate = useNavigate()
    const singOut = useSignOut()
    const location = useLocation()
    const pathname = location.pathname
+   const userid = localStorage.getItem('userId')
 
    const logout = () => {
       singOut()
@@ -35,6 +38,24 @@ export default function Common() {
       localStorage.removeItem('totalBlood')
    }
 
+   const getNotice = async () => {
+      try {
+         await axios
+            .post(`${url.backendHost}api/notice/getUserNotice`, {
+               userid,
+            })
+            .then((response) => {
+               console.log(response)
+            })
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+   useEffect(() => {
+      // getNotice()
+   }, [])
+
    //    onClick={() => navigate('/game/user')}
 
    return (
@@ -52,7 +73,7 @@ export default function Common() {
                   />
                </div>
                <div className="icon-item">
-                  <ArrowCircleLeftTwoToneIcon
+                  <ArrowCircleLeftIcon
                      onClick={() => navigate(-1)}
                      sx={{
                         color:
@@ -63,7 +84,7 @@ export default function Common() {
                   />
                </div>
                <div className="icon-item">
-                  <MeetingRoomIcon
+                  <ExitToAppRoundedIcon
                      onClick={() => logout()}
                      sx={{
                         color:

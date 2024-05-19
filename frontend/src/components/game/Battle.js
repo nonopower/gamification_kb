@@ -30,6 +30,8 @@ export default function Battle() {
       edges: [],
    })
 
+   const userid = localStorage.getItem('userId')
+
    const options = {
       layout: {
          randomSeed: 23,
@@ -241,6 +243,21 @@ export default function Battle() {
       },
    }
 
+   const updateNotice = async (id) => {
+      try {
+         await axios
+            .post(`${url.backendHost}api/notice/updateUserNotice`, {
+               userid,
+               nodeid: id,
+            })
+            .then((response) => {
+               console.log(response)
+            })
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
    const events = {
       click: (event) => {
          console.log(`Graph:click:events:`, event)
@@ -248,6 +265,7 @@ export default function Battle() {
          // console.log(`events:targetNodes`,event.nodes);
          if (event.nodes.length === 1) {
             handleClickOpen(event.nodes[0])
+            updateNotice(event.nodes[0])
             localStorage.setItem('nodeId', event.nodes[0])
          }
       },

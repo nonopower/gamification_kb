@@ -34,25 +34,6 @@ export default function Bag() {
    }
 
    // 要在別頁呼叫
-   const getPet = async () => {
-      try {
-         const response = await axios
-            .get(`${url.backendHost}api/pet/getCurrentPet`, {
-               headers: {
-                  authorization: 'Bearer JWT Token',
-               },
-               params: {
-                  groupId,
-                  activityId,
-               },
-            })
-            .then((response) => {
-               console.log(response)
-            })
-      } catch (error) {
-         console.error(error)
-      }
-   }
 
    const upPetImg = async () => {
       try {
@@ -104,8 +85,7 @@ export default function Bag() {
    }
 
    useEffect(() => {
-      getGroupBackPack()
-      getPet()
+      // getGroupBackPack()
    }, [])
 
    return (
