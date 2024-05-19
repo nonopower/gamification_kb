@@ -6,7 +6,6 @@ exports.updCurrentPet = async (req, res) => {
     try {
       const groupId = req.body.groupId;
       const activityId = req.body.activityId;
-      const petNumber = req.body.petNumber;
       const process = req.body.process;
       const query = `select * from "Pets" where "groupId" = `+ groupId +` and "activityId" = ` + activityId;
       const data = await db.sequelize.query(query, { type: db.sequelize.QueryTypes.SELECT });
@@ -18,7 +17,7 @@ exports.updCurrentPet = async (req, res) => {
       else
       {
         const ins = `INSERT INTO "Pets" ("groupId", "activityId", "petNumber", "process", "createdAt", "updatedAt") 
-          values( ` + groupId + `, ` + activityId + `, ` + petNumber +`, ` + 0 + `, current_timestamp AT TIME ZONE 'Asia/Taipei', current_timestamp AT TIME ZONE 'Asia/Taipei');`;
+          values( ` + groupId + `, ` + activityId + `, 'pet01.gif', ` + 0 + `, current_timestamp AT TIME ZONE 'Asia/Taipei', current_timestamp AT TIME ZONE 'Asia/Taipei');`;
         
         await db.sequelize.query(ins, { type: db.sequelize.QueryTypes.INSERT });
       }
@@ -28,12 +27,15 @@ exports.updCurrentPet = async (req, res) => {
       {
         if (Number(upddata[0].process) >= 100)
         {
-          const updPet = `update "Pets" set "process" = 0, "petNumber" = '`+ petNumber + `' where "groupId" = `+ groupId + ` and "activityId" = ` + activityId;
+          const numStr = upddata[0].petNumber.substring(3, 5);
+          const num = parseInt(numStr, 10) + 1;
+          const newNumStr = 'pet'+ num.toString().padStart(2, '0') + '.gif';
+          const updPet = `update "Pets" set "process" = 0, "petNumber" = '`+ newNumStr + `' where "groupId" = `+ groupId + ` and "activityId" = ` + activityId;
           await db.sequelize.query(updPet, { type: db.sequelize.QueryTypes.UPDATE });
           
           const insBackPacks = `insert into "BackPacks" 
           ("groupId", "activityId", "petNumber", "conquerTime", "createdAt", "updatedAt") 
-            values( ` + groupId + `, ` + activityId + `, '` + petNumber +`', current_timestamp AT TIME ZONE 'Asia/Taipei', current_timestamp AT TIME ZONE 'Asia/Taipei', current_timestamp AT TIME ZONE 'Asia/Taipei');`;
+            values( ` + groupId + `, ` + activityId + `, '` + newNumStr +`', current_timestamp AT TIME ZONE 'Asia/Taipei', current_timestamp AT TIME ZONE 'Asia/Taipei', current_timestamp AT TIME ZONE 'Asia/Taipei');`;
           await db.sequelize.query(insBackPacks, { type: db.sequelize.QueryTypes.INSERT });
 
           const current = await db.sequelize.query(query, { type: db.sequelize.QueryTypes.SELECT });
