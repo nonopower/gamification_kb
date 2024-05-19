@@ -135,6 +135,36 @@ exports.getGroupRanking = async (req, res) => {
       }
 }
 
+exports.getGroupRankingNewRule = async (req, res) => {
+    try {
+        const query = 
+            `WITH RECURSIVE root_finder AS (
+                SELECT "id", "from", "to", "to" AS root, "createdAt"
+                FROM "Edges"
+                WHERE "to" NOT IN (SELECT "from" FROM "Edges")
+                UNION ALL
+                SELECT c."id", c."from", c."to", rf.root, c."createdAt"
+                FROM "Edges" c
+                INNER JOIN root_finder rf ON c."to" = rf."from"
+            )
+            SELECT gp."activityId", ac."title", nd."groupId", gp."groupName" as author,
+            SUM(CASE WHEN ABS(EXTRACT(EPOCH FROM (nd."createdAt" - rf."createdAt"))) > 1800 THEN 1 ELSE 2 END) AS SCORE,
+            ROW_NUMBER() over(order by count(nd."groupId") desc) as rank
+            FROM "Nodes" nd
+            INNER JOIN root_finder rf on nd."id" = rf."root"
+            INNER JOIN "Groups" gp on nd."groupId" = gp."id"
+            INNER JOIN "ActivityGroups" ag on nd."groupId" = ag."GroupId"
+            INNER JOIN "Activities" ac on ag."ActivityId" = ac."id"
+            GROUP BY gp."activityId", ac."title", nd."groupId", gp."groupName"
+            ORDER BY SCORE DESC;`;
+    
+        const data = await db.sequelize.query(query, { type: db.sequelize.QueryTypes.SELECT });
+        res.send(data);
+      } catch (error) {
+        res.status(500).json(error);
+      }
+}
+
 exports.getAllRank = async (req, res) => {
     try {
       const query = `
