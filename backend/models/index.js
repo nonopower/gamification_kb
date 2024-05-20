@@ -44,6 +44,7 @@ db.Radar = require("./radar.model.js")(sequelize, DataTypes);
 db.Boss = require("./boss.model.js")(sequelize, DataTypes);
 db.Pet = require("./pet.model.js")(sequelize, DataTypes);
 db.BackPack = require("./backPack.model.js")(sequelize, DataTypes);
+db.Notice = require("./notice.model.js")(sequelize, DataTypes);
 
 
 

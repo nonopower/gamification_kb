@@ -10,6 +10,8 @@ const Radar = require('./radar.controller');
 const Boss = require('./boss.controller');
 const Pet = require('./pet.controller');
 const BackPack = require('./backPack.controller');
+const Notice = require('./notice.controller');
+
 
 module.exports = {
   User,
@@ -23,5 +25,6 @@ module.exports = {
   Radar,
   Boss,
   Pet,
-  BackPack
+  BackPack,
+  Notice
 };

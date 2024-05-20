@@ -83,6 +83,7 @@ require("./routes/radar.routes")(app);
 require("./routes/boss.routes")(app);
 require("./routes/pet.routes")(app);
 require("./routes/backPack.routes")(app);
+require("./routes/notice.routes")(app);
 
 // simple route
 app.get("/", (req, res) => {
