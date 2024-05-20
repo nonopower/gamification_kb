@@ -86,6 +86,11 @@ exports.createGroupsForActivity = async (req, res) => {
                 ActivityId: activityId,
                 GroupId: group.id
             }])
+
+            const ins = `INSERT INTO "Pets" ("groupId", "activityId", "petNumber", "process", "createdAt", "updatedAt") 
+                values( ` + group.id + `, ` + activityId + `, 'pet01.gif',` + 0 + `, current_timestamp AT TIME ZONE 'Asia/Taipei', current_timestamp AT TIME ZONE 'Asia/Taipei');`;
+      
+            await db.sequelize.query(ins, { type: db.sequelize.QueryTypes.INSERT });
         }
 
         // console.log('Created groups:', createdGroups);
