@@ -79,7 +79,6 @@ exports.insertPet = async (req, res) => {
   try {
     const groupId = req.body.groupId;
     const activityId = req.body.activityId;
-    const petNumber = req.body.petNumber;
     const query = `select * from "Pets" where "groupId" = `+ groupId +` and "activityId" = ` + activityId;
     const data = await db.sequelize.query(query, { type: db.sequelize.QueryTypes.SELECT });
     if (data[0])
@@ -89,7 +88,7 @@ exports.insertPet = async (req, res) => {
     else
     {
       const ins = `INSERT INTO "Pets" ("groupId", "activityId", "petNumber", "process", "createdAt", "updatedAt") 
-        values( ` + groupId + `, ` + activityId + `, '` + petNumber +`',` + 0 + `, current_timestamp AT TIME ZONE 'Asia/Taipei', current_timestamp AT TIME ZONE 'Asia/Taipei');`;
+        values( ` + groupId + `, ` + activityId + `, 'pet1.gif',` + 0 + `, current_timestamp AT TIME ZONE 'Asia/Taipei', current_timestamp AT TIME ZONE 'Asia/Taipei');`;
       
       await db.sequelize.query(ins, { type: db.sequelize.QueryTypes.INSERT });
 
