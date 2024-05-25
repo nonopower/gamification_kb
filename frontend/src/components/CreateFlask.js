@@ -23,10 +23,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setExperiment, setPoint } from '../redux/counterSlice'
 import axios from 'axios'
 import url from './../url.json'
+import eventBus from '../utils/EventBus'
 
 export const CreateFlask = ({ open, onClose, ws }) => {
    const experiment = useSelector((state) => state.experiment)
-   const point = useSelector((state) => state.point)
    const dispatch = useDispatch()
 
    const name = localStorage.getItem('name')
@@ -96,7 +96,11 @@ export const CreateFlask = ({ open, onClose, ws }) => {
       }
       setLoading(true)
       try {
-         await newNode(ideaData, sessionStorage.getItem('activityId'), ws)
+         await newNode(ideaData, sessionStorage.getItem('activityId'), ws).then(
+            (res) => {
+               console.log(res)
+            },
+         )
          await updateRadar()
          window.location.reload(false)
          alert('新增成功')

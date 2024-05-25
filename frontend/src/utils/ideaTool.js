@@ -3,6 +3,9 @@ import config from '../config.json'
 import axios from 'axios'
 import { sendNewNodeMessage, sendNewEdgeMessage } from '../utils/socketTool'
 
+const author = localStorage.getItem('name')
+const groupId = localStorage.getItem('groupId')
+
 export const newNode = async (ideaData, activityId, ws) => {
    return axios
       .post(url.backendHost + config[7].createNode, ideaData)
@@ -15,6 +18,8 @@ export const newNode = async (ideaData, activityId, ws) => {
             createdAt: response.data.node.createdAt,
             updatedAt: response.data.node.updatedAt,
             activityId: activityId,
+            author,
+            groupId,
          })
          console.log('sendNewNodeMessage')
          return response

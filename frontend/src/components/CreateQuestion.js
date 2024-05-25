@@ -22,7 +22,6 @@ import url from './../url.json'
 
 export const CreateQuestion = ({ open, onClose, ws }) => {
    const ask = useSelector((state) => state.ask)
-   const point = useSelector((state) => state.point)
    const dispatch = useDispatch()
 
    const name = localStorage.getItem('name')

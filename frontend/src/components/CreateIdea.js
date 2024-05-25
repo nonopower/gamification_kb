@@ -81,7 +81,6 @@ export const CreateIdea = ({ open, onClose, ws }) => {
    const [content, setContent] = useState()
 
    const idea = useSelector((state) => state.idea)
-   const point = useSelector((state) => state.point)
    const dispatch = useDispatch()
 
    const nodeDefault = {

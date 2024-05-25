@@ -10,17 +10,12 @@ import { genEdge, genNode } from './../../utils/ideaTool'
 import io from 'socket.io-client'
 import Graph from 'react-vis-network-graph'
 import { ViewNode } from './../../components/ViewNode'
-import { useDispatch, useSelector } from 'react-redux'
-import { setPoint } from '../../redux/counterSlice'
 import Common from './Common'
 import Bag from './Bag'
 import eventBus from '../../utils/EventBus'
 
 export default function Battle() {
-   // user 點數紀錄
-   const point = useSelector((state) => state.point)
-   const dispatch = useDispatch()
-
+   const userid = localStorage.getItem('userId')
    const activeName = localStorage.getItem('activityName')
    const [open, setOpen] = useState(false)
    const [nodeContent, setNodeContent] = useState(null)
@@ -29,8 +24,6 @@ export default function Battle() {
       nodes: [],
       edges: [],
    })
-
-   const userid = localStorage.getItem('userId')
 
    const options = {
       layout: {
@@ -259,13 +252,13 @@ export default function Battle() {
    }
 
    const events = {
-      click: (event) => {
+      click: async (event) => {
          console.log(`Graph:click:events:`, event)
          console.log(`Graph:click:graph`, graph)
          // console.log(`events:targetNodes`,event.nodes);
          if (event.nodes.length === 1) {
             handleClickOpen(event.nodes[0])
-            updateNotice(event.nodes[0])
+            await updateNotice(event.nodes[0])
             localStorage.setItem('nodeId', event.nodes[0])
          }
       },
@@ -289,8 +282,8 @@ export default function Battle() {
    }
 
    const fetchGroupData = useCallback(async () => {
-      const enterDifferentGroupEndpoint = `${url.backendHost}${config[16].EnterDifferentGroup}${localStorage.getItem('joinCode')}/${localStorage.getItem('userId')}`
-      const getMyGroupEndpoint = `${url.backendHost}${config[12].getMyGroup}/${localStorage.getItem('activityId')}/${localStorage.getItem('userId')}`
+      const enterDifferentGroupEndpoint = `${url.backendHost}${config[16].EnterDifferentGroup}${localStorage.getItem('joinCode')}/${userid}`
+      const getMyGroupEndpoint = `${url.backendHost}${config[12].getMyGroup}/${localStorage.getItem('activityId')}/${userid}`
 
       try {
          const response = await axios.get(enterDifferentGroupEndpoint, {
@@ -364,6 +357,7 @@ export default function Battle() {
          const response = await axios.get(
             `${url.backendHost + config[11].getOneNode}/${nodeId}`,
          )
+         // console.log(response.data)
          setNodeContent(response.data)
       } catch (err) {
          console.error(err)
@@ -387,8 +381,40 @@ export default function Battle() {
    useEffect(() => {
       eventBus.on('bag-status', (status) => {
          setOpenBag(status)
-         // window.location.reload(false)
       })
+   }, [])
+
+   // 取得目前抓的
+
+   const groupId = localStorage.getItem('groupId')
+   const activityId = localStorage.getItem('activityId')
+
+   const [pet, setPet] = useState({})
+
+   const getPet = async () => {
+      try {
+         const response = await axios
+            .post(`${url.backendHost}api/pet/getCurrentPet`, {
+               groupId,
+               activityId,
+            })
+            .then((response) => {
+               setPet(response.data)
+               localStorage.setItem('petNumber', response.data.petNumber)
+            })
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+   useEffect(() => {
+      getPet()
+   }, [])
+
+   // 每一分鐘抓寶一次
+   useEffect(() => {
+      const intervalId = setInterval(getPet, 1 * 60 * 1000)
+      return () => clearInterval(intervalId)
    }, [])
 
    return (
@@ -402,7 +428,7 @@ export default function Battle() {
                </div>
                <Graph graph={graph} options={options} events={events} />
             </div>
-            <BattleRightInfo />
+            <BattleRightInfo pet={pet} />
          </div>
          <ViewNode
             open={open}

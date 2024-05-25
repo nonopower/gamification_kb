@@ -25,7 +25,6 @@ import url from './../url.json'
 
 export const CreateNote = ({ open, onClose, ws }) => {
    const record = useSelector((state) => state.record)
-   const point = useSelector((state) => state.point)
    const dispatch = useDispatch()
 
    const name = localStorage.getItem('name')

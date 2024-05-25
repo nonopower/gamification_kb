@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import {
    Button,
    ButtonGroup,
@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setReply, setPoint } from '../redux/counterSlice'
 import axios from 'axios'
 import url from './../url.json'
+import eventBus from '../utils/EventBus'
 
 const scaffold = [
    <Button key="1">【我有個想法】</Button>,

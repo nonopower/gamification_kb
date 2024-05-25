@@ -1,160 +1,36 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import CompareArrowsSharpIcon from '@mui/icons-material/CompareArrowsSharp'
-import { useDispatch, useSelector } from 'react-redux'
-import { monsterArr } from './../../redux/counterSlice'
-import { setNextMonster } from '../../utils/monster'
 import eventBus from '../../utils/EventBus'
 import axios from 'axios'
 import url from '../../url.json'
+import config from '../../config.json'
 
 export default function BattleRightInfo() {
    const groupId = localStorage.getItem('groupId')
    const activityId = localStorage.getItem('activityId')
-   const dispatch = useDispatch()
-   const point = useSelector((state) => state.point)
-   const [nowMonsterImg, setNowMonsterImg] = useState('')
+   const userid = localStorage.getItem('userId')
+
    const role = localStorage.getItem('role') + '2.gif'
+   const petNumber = localStorage.getItem('petNumber')
 
-   // 設定第一隻 or 在打的怪
-   useEffect(() => {
-      try {
-         if (localStorage.getItem('monster')) {
-            const nowMonster = localStorage.getItem('monster')
-            const nowIndex = monsterArr.findIndex(
-               (item) => item.name === nowMonster,
-            )
-            localStorage.setItem('totalBlood', monsterArr[nowIndex].blood)
-            setNowMonsterImg(monsterArr[nowIndex].img + '1.png')
-            getBloodWidth()
-         }
-         if (!localStorage.getItem('monster')) {
-            try {
-               localStorage.setItem('monster', monsterArr[0].name)
-               localStorage.setItem('blood', monsterArr[0].blood)
-               localStorage.setItem('totalBlood', monsterArr[0].blood)
-               localStorage.setItem('mode', 'normal')
-            } finally {
-               setNowMonsterImg(monsterArr[0].img + '1.png')
-               getBloodWidth()
-            }
-         }
-      } finally {
-         eventBus.emit('loading', false)
-      }
-   }, [])
-
-   // 倒數回血計時器，5 分鐘開始回血
-   const [seconds, setSeconds] = useState(0)
-   // 回血計時器，一分鐘 + 1 血
-   const [addBloodSec, setAddBloodSec] = useState(0)
-
-   const addBlood = () => {
-      const nowBlood = +localStorage.getItem('blood')
-      const totalBlood = +localStorage.getItem('totalBlood')
-      try {
-         if (nowBlood + 1 <= totalBlood) {
-            localStorage.setItem('blood', nowBlood + 1)
-         } else {
-            return false
-         }
-      } finally {
-         getBloodWidth()
-      }
-   }
-
-   let addBloodIntervalIdRef = useRef(null)
-   const addBloodInterval = useCallback(() => {
-      const blood = +localStorage.getItem('blood')
-      const totalBlood = +localStorage.getItem('totalBlood')
-      addBloodIntervalIdRef.current = setInterval(() => {
-         setAddBloodSec((prevSeconds) => {
-            if (prevSeconds === 3) {
-               addBlood()
-               return 0
-            }
-            if (blood === totalBlood) {
-               clearInterval(addBloodIntervalIdRef.current)
-            }
-            return prevSeconds + 1
-         })
-      }, 1000)
-   }, [])
-
-   let fiveminsIntervalIdRef = useRef(null)
-   const fiveminsInterval = useCallback(async () => {
-      fiveminsIntervalIdRef.current = setInterval(() => {
-         setSeconds((prevSeconds) => {
-            if (prevSeconds === 5) {
-               clearInterval(fiveminsIntervalIdRef.current)
-               return
-            }
-            return prevSeconds + 1
-         })
-      }, 1000)
-   }, [])
-
-   // 監聽怪物模式，觸發換圖、回血
-   useEffect(() => {
-      fiveminsInterval().then(() => {
-         addBloodInterval()
-      })
-
-      eventBus.on('monster-mode', (mode) => {
-         const nowMonster = localStorage.getItem('monster')
-         const nowIndex = monsterArr.findIndex(
-            (item) => item.name === nowMonster,
-         )
-         if (mode === 'normal') {
-            setNowMonsterImg(monsterArr[nowIndex].img + '1.png')
-            fiveminsInterval().then(() => {
-               addBloodInterval()
-            })
-         } else {
-            setNowMonsterImg(monsterArr[nowIndex].img + '2.gif')
-            clearInterval(fiveminsIntervalIdRef.current)
-            clearInterval(addBloodIntervalIdRef.current)
-            setSeconds(0)
-            setAddBloodSec(0)
-         }
-      })
-   }, [])
-
+   // exp 寬度計算
    const bloodBar = useRef(null)
    const totalBar = useRef(null)
 
-   // 血條寬度計算
-   const getBloodWidth = useCallback(() => {
+   const getExpWidth = useCallback(() => {
       const totalWidth = window.getComputedStyle(totalBar.current).width
+      const exp = pet.process
+      const total = 100
+      const prop = exp / total
 
-      const nowBlood = +localStorage.getItem('blood')
-      const totalBlood = +localStorage.getItem('totalBlood')
-      const prop = nowBlood / totalBlood
-
-      if (nowBlood === totalBlood) {
+      if (exp === total) {
          bloodBar.current.style.width = totalWidth + 'px'
       }
 
       bloodBar.current.style.width = totalWidth.slice(0, -2) * prop + 'px'
    }, [])
 
-   // 監聽怪物血量，觸發血條長度變化
-   useEffect(() => {
-      eventBus.on('monster-blood', () => {
-         const blood = +localStorage.getItem('blood')
-         if (blood === 0) setNextMonster()
-         getBloodWidth()
-      })
-   }, [])
-
-   /**
-    *
-    *
-    * 新邏輯
-    *
-    *
-    */
-
-   const [pet, setPet] = useState()
+   // 取得目前抓的
+   const [pet, setPet] = useState({})
 
    const getPet = async () => {
       try {
@@ -164,63 +40,129 @@ export default function BattleRightInfo() {
                activityId,
             })
             .then((response) => {
-               console.log(response)
-               setPet(response.data.petNumber)
+               setPet(response.data)
+               localStorage.setItem('petNumber', response.data.petNumber)
             })
       } catch (error) {
          console.error(error)
       }
    }
 
+   useEffect(() => {
+      getPet()
+   }, [])
+
+   // 每一分鐘抓寶一次
+   useEffect(() => {
+      const intervalId = setInterval(getPet, 1 * 60 * 1000)
+      return () => clearInterval(intervalId)
+   }, [])
+
+   useEffect(() => {
+      getExpWidth()
+   }, [pet])
+
    const onClickBag = (e) => {
       e.preventDefault()
       eventBus.emit('bag-status', true)
    }
 
+   const [team, setTeam] = useState()
+
+   const getTeamMember = async () => {
+      try {
+         await axios.get(`${url.backendHost}api/users`).then((response) => {
+            setTeam(response.data)
+         })
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+   const [groupData, setGroupData] = useState()
+
+   const getGroups = async () => {
+      try {
+         const fetchData = await axios.get(
+            url.backendHost +
+               config[15].findAllGroup +
+               localStorage.getItem('activityId'),
+            {
+               headers: {
+                  authorization: 'Bearer JWT Token',
+               },
+            },
+         )
+         // console.log('GroupData: ', fetchData.data.Groups);
+         setGroupData(fetchData.data.Groups)
+      } catch (err) {
+         // console.log(err);
+      }
+   }
+
    useEffect(() => {
-      getPet()
+      getGroups()
+      getTeamMember()
    }, [])
+
+   const [memberData, setMemberData] = useState()
+
+   useEffect(() => {
+      if (team && groupData) {
+         const group = groupData.find((item) => item.id === +groupId)
+
+         console.log(group)
+
+         if (group && Array.isArray(group.userId)) {
+            const teamMemberData = group.userId.map((id) => {
+               return team.find((item) => +item.id === id)
+            })
+
+            setMemberData(teamMemberData)
+         }
+      }
+   }, [team, groupData, groupId])
+
+   // useEffect(() => {
+   //    console.log(memberData)
+   // }, [memberData])
 
    return (
       <>
          <div className="battle-right-info">
-            <div className="icon-button">
-               <CompareArrowsSharpIcon
-                  sx={{ color: '#ffffff' }}
-                  fontSize={'large'}
-               />
-            </div>
-            <div className="img-container">
-               <div className="team">
-                  <div className="other">
-                     <div className="people">
-                        <img src="/game/role/m_blue_2.gif" alt="" />
-                     </div>
-                     <div className="people">
-                        <img src="/game/role/bird_2.gif" alt="" />
-                     </div>
-                     <div className="people">
-                        <img src="/game/role/w_leather_2.gif" alt="" />
-                     </div>
-                  </div>
-                  <div className="user">
-                     <img src={role} alt="" />
+            <div className="monster-container">
+               <div className="img-container">
+                  <div className="monster">
+                     <img src={`/game/new_monster/${pet.petNumber}`} alt="" />
                   </div>
                </div>
-               <div className="monster">
-                  <img src={`/game/new_monster/${pet}`} />
+               <div className="bar-container">
+                  <div className="bar-outer" ref={totalBar}>
+                     <div className="bar" ref={bloodBar} />
+                  </div>
                </div>
             </div>
-            <div className="bar-container">
-               {/* <h4>{localStorage.getItem('monster')}</h4> */}
-               <div className="bar-outer" ref={totalBar}>
-                  <div className="bar" ref={bloodBar} />
-               </div>
+            <div className="bag-container">
+               <a href="/" className="bag-button" onClick={onClickBag}>
+                  <img src="/game/backpack.png" alt="" />
+               </a>
+            </div>
+            <div className="team-container">
+               {memberData &&
+                  memberData.map((item, index) => (
+                     <div className="user-item" key={index}>
+                        <img
+                           src={`${item.imageContent}1.png`}
+                           key={index}
+                           style={{
+                              filter: item.state ? 'grayscale(100%)' : 'none',
+                           }}
+                           alt=""
+                        />
+                     </div>
+                  ))}
             </div>
          </div>
-         <a href="/" className="bag-button" onClick={onClickBag}>
-            <img src="/game/backpack.png" alt="" />
-         </a>
       </>
    )
 }

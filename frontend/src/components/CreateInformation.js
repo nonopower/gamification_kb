@@ -25,7 +25,6 @@ import url from './../url.json'
 
 export const CreateInformation = ({ open, onClose, ws }) => {
    const info = useSelector((state) => state.info)
-   const point = useSelector((state) => state.point)
    const dispatch = useDispatch()
 
    const name = localStorage.getItem('name')

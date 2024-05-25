@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import './bag.scss'
 import eventBus from '../../utils/EventBus'
 import axios from 'axios'
@@ -8,6 +8,8 @@ export default function Bag() {
    const groupId = localStorage.getItem('groupId')
    const activityId = localStorage.getItem('activityId')
 
+   const [monsterList, setMonsterList] = useState()
+
    const back = (e) => {
       e.preventDefault()
       eventBus.emit('bag-status', false)
@@ -15,7 +17,7 @@ export default function Bag() {
 
    const getGroupBackPack = async () => {
       try {
-         const response = await axios
+         await axios
             .get(`${url.backendHost}api/backPack/getGroupBackPack`, {
                headers: {
                   authorization: 'Bearer JWT Token',
@@ -26,7 +28,7 @@ export default function Bag() {
                },
             })
             .then((response) => {
-               console.log(response)
+               setMonsterList(response)
             })
       } catch (error) {
          console.error(error)
@@ -34,22 +36,6 @@ export default function Bag() {
    }
 
    // 要在別頁呼叫
-
-   const upPetImg = async () => {
-      try {
-         const response = await axios
-            .post(`${url.backendHost}api/pet/updPet`, {
-               groupId,
-               activityId,
-               petNumber: '',
-            })
-            .then((response) => {
-               console.log(response)
-            })
-      } catch (error) {
-         console.error(error)
-      }
-   }
 
    const addGroupPet = async () => {
       try {
@@ -67,25 +53,8 @@ export default function Bag() {
       }
    }
 
-   const addAttack = async () => {
-      try {
-         const response = await axios
-            .post(`${url.backendHost}api/pet/updCurrentPet`, {
-               groupId,
-               activityId,
-               petNumber: '',
-               process: 0,
-            })
-            .then((response) => {
-               console.log(response)
-            })
-      } catch (error) {
-         console.error(error)
-      }
-   }
-
    useEffect(() => {
-      // getGroupBackPack()
+      getGroupBackPack()
    }, [])
 
    return (
@@ -94,9 +63,12 @@ export default function Bag() {
             <div className="bag-container">
                <h1>Backpack</h1>
                <div className="monster-area">
-                  <div className="monster-item">
-                     <img src="/game/new_monster/cat.gif" alt="" />
-                  </div>
+                  {monsterList &&
+                     monsterList.map((item, index) => {
+                        ;<div className="monster-item" key={index}>
+                           <img src={`/game/new_monster/${item}`} alt="" />
+                        </div>
+                     })}
                </div>
             </div>
             <button onClick={back}>Back</button>
