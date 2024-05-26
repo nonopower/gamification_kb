@@ -31,7 +31,6 @@ export default function Login() {
    const handleSubmit = async (e) => {
       e.preventDefault()
 
-      if (role === 'teacher') navigate('/')
       if (email === '' || password === '') return
 
       const userData = {
@@ -79,6 +78,29 @@ export default function Login() {
          <div className="login-container">
             <div className="info-container">
                <Stack>
+                  <Button
+                     onClick={() => navigate('/')}
+                     variant="outlined"
+                     size="large"
+                     color="secondary"
+                     sx={{
+                        border: '3px solid #ffffff',
+                        color: '#fff',
+                        borderRadius: '90px',
+                        height: '48px',
+                        position: 'relative',
+                        left: '100%',
+                        width: '160px',
+                        '&:hover': {
+                           border: '3px solid #fff',
+                           color: '#fff',
+                        },
+                     }}
+                  >
+                     前往教師頁面
+                  </Button>
+               </Stack>
+               <Stack>
                   <img className="title" src="/game/title.png" alt="" />
                </Stack>
                <Stack
@@ -124,53 +146,6 @@ export default function Login() {
                         ),
                      }}
                   />
-               </Stack>
-               <Stack
-                  sx={{
-                     mx: '20%',
-                  }}
-               >
-                  <FormControl margin="normal">
-                     <RadioGroup
-                        row
-                        aria-labelledby="demo-radio-buttons-group-label"
-                        defaultValue="female"
-                        name="radio-buttons-group"
-                        value={role}
-                        onChange={handleRoleChange}
-                     >
-                        <FormControlLabel
-                           value="teacher"
-                           control={
-                              <Radio
-                                 sx={{
-                                    color: common.white,
-                                    '&.Mui-checked': {
-                                       color: common.white,
-                                    },
-                                 }}
-                              />
-                           }
-                           sx={{ color: '#ffffff' }}
-                           label="教師"
-                        />
-                        <FormControlLabel
-                           value="student"
-                           control={
-                              <Radio
-                                 sx={{
-                                    color: common.white,
-                                    '&.Mui-checked': {
-                                       color: common.white,
-                                    },
-                                 }}
-                              />
-                           }
-                           sx={{ color: '#ffffff' }}
-                           label="學生"
-                        />
-                     </RadioGroup>
-                  </FormControl>
                </Stack>
                <Stack
                   sx={{
