@@ -13,6 +13,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar'
 import SnackbarContent from '@mui/material/SnackbarContent'
 import Common from './Common'
+import axios from 'axios'
+import config from '../../config.json'
+import url from '../../url.json'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Tooltip)
 
@@ -32,33 +35,25 @@ const Badge = (type, message) => {
 }
 
 export default function User() {
-   const [chartData, setChartData] = useState({ labels: [], datasets: [] })
    const [lv, setLv] = useState(1)
    const name = localStorage.getItem('name')
+   const userid = localStorage.getItem('userId')
    const role = localStorage.getItem('role') + '1.png'
-   const navigate = useNavigate()
-   const dispatch = useDispatch()
    const gold = '/game/gold-medal.png'
    const silver = '/game/silver-medal.png'
 
    // 想法
-   const idea = useSelector((state) => state.idea)
-   // 資訊
-   const info = useSelector((state) => state.info)
-   // 提問
-   const ask = useSelector((state) => state.ask)
-   // 紀錄
-   const record = useSelector((state) => state.record)
-   // 實驗
-   const experiment = useSelector((state) => state.experiment)
+   const [idea, setIdea] = useState()
+   const [reply, setReply] = useState()
+   const [info, setInfo] = useState()
+   const [ask, setAsk] = useState()
+   const [record, setRecord] = useState()
+   const [experiment, setExperiment] = useState()
 
    // point
    const point = useSelector((state) => state.point)
-
    // read
-   const read = +localStorage.getItem('read')
-   // 回覆
-   const reply = useSelector((state) => state.reply)
+   const read = useSelector((state) => state.read)
 
    const options = {
       scales: {
@@ -85,26 +80,61 @@ export default function User() {
       },
    }
 
+   const getRadar = async () => {
+      try {
+         await axios
+            .get(`${url.backendHost}api/radar/${userid}`)
+            .then((response) => {
+               console.log(response)
+               setIdea(+response.data.idea)
+               setInfo(+response.data.info)
+               setReply(+response.data.reply)
+               setAsk(+response.data.ask)
+               setRecord(+response.data.record)
+               setExperiment(+response.data.experiment)
+               setDataModel((prevModel) => ({
+                  ...prevModel,
+                  datasets: prevModel.datasets.map((dataset) =>
+                     dataset === prevModel.datasets[0]
+                        ? {
+                             ...dataset,
+                             data: [
+                                +response.data.idea,
+                                +response.data.reply,
+                                +response.data.ask,
+                                +response.data.record,
+                                +response.data.experiment,
+                                +response.data.info,
+                             ],
+                          }
+                        : dataset,
+                  ),
+               }))
+            })
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
    useEffect(() => {
-      setChartData(() => dataMode2)
+      getRadar()
    }, [])
 
-   const dataMode2 = {
+   const [dataModel, setDataModel] = useState({
       labels: ['想法產生', '多元想法', '想法改進', '闡述', '貢獻', '資訊提供'],
       datasets: [
          {
-            data: [idea, reply, ask, record, experiment, info],
+            data: [],
             backgroundColor: '#ffd12a',
             borderColor: '#ffd12a',
             borderWidth: 2,
          },
       ],
-   }
+   })
 
-   const back = (e) => {
-      e.preventDefault()
-      navigate(-1)
-   }
+   useEffect(() => {
+      console.log(dataModel)
+   }, [idea, reply, ask, record, experiment, info])
 
    const expBar = useRef(null)
    const totalBar = useRef(null)
@@ -307,7 +337,7 @@ export default function User() {
                   <div className="skill-container">
                      <h3>角色能力</h3>
                      <div className="chart-rader">
-                        <Radar data={chartData} options={options} />
+                        <Radar data={dataModel} options={options} />
                      </div>
                   </div>
                </div>

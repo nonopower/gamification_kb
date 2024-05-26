@@ -1,47 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
 import eventBus from '../utils/EventBus'
 
-// monster array
-export const monsterArr = [
-   {
-      name: 'LV.1',
-      blood: 20,
-      img: '/game/monster/monster_zombie_',
-   },
-   {
-      name: 'LV.2',
-      blood: 50,
-      img: '/game/monster/monster_robot_',
-   },
-   {
-      name: 'LV.3',
-      blood: 100,
-      img: '/game/monster/monster_bear_',
-   },
-   {
-      name: 'LV.4',
-      blood: 150,
-      img: '/game/monster/monster_cloak_',
-   },
-   {
-      name: 'LV.5',
-      blood: 300,
-      img: '/game/monster/monster_lion_',
-   },
-]
-
 // point
 export const pointSlice = createSlice({
    name: 'point',
    initialState: 0,
    reducers: {
       setPoint: (state, action) => {
-         const point = state % 5
-         const blood = +localStorage.getItem('blood')
-         if (point + action.payload >= 5 && blood > 0) {
-            localStorage.setItem('blood', blood - 1)
-            eventBus.emit('monster-blood')
-         }
          return state + action.payload
       },
    },
@@ -110,15 +75,6 @@ export const replySlice = createSlice({
    },
 })
 
-// 上線時間
-export const onlineSlice = createSlice({
-   name: 'online',
-   initialState: 0,
-   reducers: {
-      setOnline: (state, action) => state + action.payload,
-   },
-})
-
 export const { setPoint } = pointSlice.actions
 export const { setIdea } = ideaSlice.actions
 export const { setInfo } = infoSlice.actions
@@ -127,4 +83,3 @@ export const { setExperiment } = experimentSlice.actions
 export const { setRecord } = recordSlice.actions
 export const { setRead } = readSlice.actions
 export const { setReply } = replySlice.actions
-export const { setOnline } = onlineSlice.actions

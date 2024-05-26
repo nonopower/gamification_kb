@@ -19,7 +19,6 @@ import {
    infoSlice,
    readSlice,
    replySlice,
-   onlineSlice,
 } from './counterSlice'
 
 const persistConfig = {
@@ -36,7 +35,6 @@ const rootReducer = combineReducers({
    info: infoSlice.reducer,
    read: readSlice.reducer,
    reply: replySlice.reducer,
-   online: onlineSlice.reducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

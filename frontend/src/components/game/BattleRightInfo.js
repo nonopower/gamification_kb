@@ -5,29 +5,14 @@ import url from '../../url.json'
 import config from '../../config.json'
 
 export default function BattleRightInfo() {
+   // eventBus.emit('loading', true)
+
    const groupId = localStorage.getItem('groupId')
    const activityId = localStorage.getItem('activityId')
    const userid = localStorage.getItem('userId')
 
    const role = localStorage.getItem('role') + '2.gif'
    const petNumber = localStorage.getItem('petNumber')
-
-   // exp 寬度計算
-   const bloodBar = useRef(null)
-   const totalBar = useRef(null)
-
-   const getExpWidth = useCallback(() => {
-      const totalWidth = window.getComputedStyle(totalBar.current).width
-      const exp = pet.process
-      const total = 100
-      const prop = exp / total
-
-      if (exp === total) {
-         bloodBar.current.style.width = totalWidth + 'px'
-      }
-
-      bloodBar.current.style.width = totalWidth.slice(0, -2) * prop + 'px'
-   }, [])
 
    // 取得目前抓的
    const [pet, setPet] = useState({})
@@ -48,6 +33,24 @@ export default function BattleRightInfo() {
       }
    }
 
+   // exp 寬度計算
+   const bloodBar = useRef(null)
+   const totalBar = useRef(null)
+
+   const getExpWidth = (process) => {
+      const totalWidth = window.getComputedStyle(totalBar.current).width
+      if (!process) return
+      const total = 100
+      const prop = process / total
+      console.log(prop)
+
+      if (process === total) {
+         bloodBar.current.style.width = totalWidth + 'px'
+      }
+      bloodBar.current.style.width = totalWidth.slice(0, -2) * prop + 'px'
+      // eventBus.emit('loading', false)
+   }
+
    useEffect(() => {
       getPet()
    }, [])
@@ -59,7 +62,7 @@ export default function BattleRightInfo() {
    }, [])
 
    useEffect(() => {
-      getExpWidth()
+      getExpWidth(pet.process)
    }, [pet])
 
    const onClickBag = (e) => {
@@ -111,8 +114,6 @@ export default function BattleRightInfo() {
       if (team && groupData) {
          const group = groupData.find((item) => item.id === +groupId)
 
-         console.log(group)
-
          if (group && Array.isArray(group.userId)) {
             const teamMemberData = group.userId.map((id) => {
                return team.find((item) => +item.id === id)
@@ -122,10 +123,6 @@ export default function BattleRightInfo() {
          }
       }
    }, [team, groupData, groupId])
-
-   // useEffect(() => {
-   //    console.log(memberData)
-   // }, [memberData])
 
    return (
       <>

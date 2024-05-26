@@ -56,6 +56,8 @@ export default function Common() {
       localStorage.removeItem('monster')
       localStorage.removeItem('login')
       localStorage.removeItem('totalBlood')
+      localStorage.removeItem('petNumber')
+      localStorage.removeItem('read')
    }
 
    const getNotice = async () => {

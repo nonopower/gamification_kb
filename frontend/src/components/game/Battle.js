@@ -13,6 +13,8 @@ import { ViewNode } from './../../components/ViewNode'
 import Common from './Common'
 import Bag from './Bag'
 import eventBus from '../../utils/EventBus'
+import { setRead } from '../../redux/counterSlice'
+import { useDispatch, useSelector } from 'react-redux'
 
 export default function Battle() {
    const userid = localStorage.getItem('userId')
@@ -24,6 +26,7 @@ export default function Battle() {
       nodes: [],
       edges: [],
    })
+   const dispatch = useDispatch()
 
    const options = {
       layout: {
@@ -261,6 +264,7 @@ export default function Battle() {
             await updateNotice(event.nodes[0])
             localStorage.setItem('nodeId', event.nodes[0])
          }
+         dispatch(setRead(1))
       },
       dragEnd: (event) => {
          //console.log(`Graph:dragEnd:events:`,event);
