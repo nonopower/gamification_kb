@@ -35,17 +35,13 @@ export default function BattleRightInfo() {
       }
    }
 
-   const getPetAndBar = async () => {
-      await getPet().then(getExpWidth(pet.process))
-   }
-
    useEffect(() => {
-      getPetAndBar()
+      getPet()
    }, [])
 
    // 每一分鐘抓寶一次
    useEffect(() => {
-      const intervalId = setInterval(getPetAndBar, 1 * 60 * 1000)
+      const intervalId = setInterval(getPet, 1 * 60 * 1000)
       return () => clearInterval(intervalId)
    }, [])
 
@@ -54,25 +50,52 @@ export default function BattleRightInfo() {
    const totalBar = useRef(null)
 
    const getExpWidth = (process) => {
-      console.log(bloodBar.current.style.width)
-      const totalWidth = window.getComputedStyle(totalBar.current).width
+      const totalWidthStr = window.getComputedStyle(totalBar.current).width
       if (!process) return
+      if (totalWidthStr === '0px') return
+
+      const totalWidth = parseFloat(totalWidthStr)
       const total = 100
-      const prop = process / total
 
       if (process === total) {
          bloodBar.current.style.width = totalWidth + 'px'
       }
-      bloodBar.current.style.width = totalWidth.slice(0, -2) * prop + 'px'
+
+      const prop = process / total
+      bloodBar.current.style.width = totalWidth * prop + 'px'
    }
 
+   useEffect(() => {
+      const resizeObserver = new ResizeObserver(() => {
+         if (
+            totalBar.current &&
+            totalBar.current.offsetWidth > 0 &&
+            pet.process
+         ) {
+            const width = window.getComputedStyle(totalBar.current).width
+            getExpWidth(pet.process)
+         }
+      })
+
+      if (totalBar.current) {
+         resizeObserver.observe(totalBar.current)
+      }
+
+      return () => {
+         if (totalBar.current) {
+            resizeObserver.unobserve(totalBar.current)
+         }
+      }
+   }, [totalBar, pet])
+
    // useEffect(() => {
-   //    if (pet) getExpWidth(pet.process)
+   //    getExpWidth(pet.process)
    // }, [pet])
 
    // useEffect(() => {
-   //    console.log(pet)
-   // }, [pet])
+   //    const width = window.getComputedStyle(totalBar.current).width
+   //    if (width !== '0px') getExpWidth(pet.process)
+   // }, [totalBar.current])
 
    const onClickBag = (e) => {
       e.preventDefault()
@@ -131,8 +154,6 @@ export default function BattleRightInfo() {
          }
       }
    }, [team, groupData, groupId])
-
-   console.log(memberData)
 
    return (
       <>
