@@ -36,7 +36,6 @@ const scaffold = [
 ]
 
 export const CreateReply = ({ open, onClose, nodeContent, ws }) => {
-   const reply = useSelector((state) => state.reply)
    const point = useSelector((state) => state.point)
    const dispatch = useDispatch()
 
@@ -91,7 +90,7 @@ export const CreateReply = ({ open, onClose, nodeContent, ws }) => {
       setEditorState(newEditorState)
    }
 
-   const updateRadar = async () => {
+   const updateRadar = async (reply) => {
       try {
          const data = {
             id: localStorage.getItem('userId'),
@@ -150,7 +149,7 @@ export const CreateReply = ({ open, onClose, nodeContent, ws }) => {
          alert('回覆成功')
 
          //
-         await updateRadar()
+         await updateRadar(1)
          onClose(onClose)
          setLoading(false)
          setData(nodeDefault)

@@ -158,8 +158,9 @@ export default function User() {
    }, [])
 
    const checkOnline = () => {
-      const online = localStorage.getItem('online')
-      checkMin(online)
+      const nowTime = new Date().getTime()
+      const login = localStorage.getItem('login')
+      checkMin(nowTime - login)
    }
 
    const checkMin = (onlineDuration) => {
@@ -170,6 +171,8 @@ export default function User() {
 
       if (minutes >= 30) localStorage.setItem('silver30', 1)
       if (hours >= 1) localStorage.setItem('goldhour', hours)
+
+      console.log(leave1, hours, leave2, minutes)
    }
 
    useEffect(() => {

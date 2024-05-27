@@ -21,7 +21,6 @@ import axios from 'axios'
 import url from './../url.json'
 
 export const CreateQuestion = ({ open, onClose, ws }) => {
-   const ask = useSelector((state) => state.ask)
    const dispatch = useDispatch()
 
    const name = localStorage.getItem('name')
@@ -53,7 +52,7 @@ export const CreateQuestion = ({ open, onClose, ws }) => {
       })
    }
 
-   const updateRadar = async () => {
+   const updateRadar = async (ask) => {
       try {
          const data = {
             id: localStorage.getItem('userId'),
@@ -91,7 +90,7 @@ export const CreateQuestion = ({ open, onClose, ws }) => {
       setLoading(true)
       try {
          await newNode(ideaData, sessionStorage.getItem('activityId'), ws)
-         await updateRadar()
+         await updateRadar(1)
          window.location.reload(false)
          alert('新增成功')
          onClose(onClose)

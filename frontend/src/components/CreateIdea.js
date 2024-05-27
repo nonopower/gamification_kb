@@ -80,7 +80,6 @@ export const CreateIdea = ({ open, onClose, ws }) => {
    const [loading, setLoading] = useState(false)
    const [content, setContent] = useState()
 
-   const idea = useSelector((state) => state.idea)
    const dispatch = useDispatch()
 
    const nodeDefault = {
@@ -133,7 +132,7 @@ export const CreateIdea = ({ open, onClose, ws }) => {
       setEditorState(newEditorState)
    }
 
-   const updateRadar = async () => {
+   const updateRadar = async (idea) => {
       try {
          const data = {
             id: localStorage.getItem('userId'),
@@ -171,7 +170,7 @@ export const CreateIdea = ({ open, onClose, ws }) => {
       setLoading(true)
       try {
          await newNode(ideaData, sessionStorage.getItem('activityId'), ws)
-         await updateRadar()
+         await updateRadar(1)
          window.location.reload(false)
          alert('新增成功')
          onClose(onClose)

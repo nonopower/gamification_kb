@@ -10,7 +10,6 @@ export default function BattleRightInfo() {
    const groupId = localStorage.getItem('groupId')
    const activityId = localStorage.getItem('activityId')
    const userid = localStorage.getItem('userId')
-   const process = localStorage.getItem('process')
 
    const role = localStorage.getItem('role') + '2.gif'
    const petNumber = localStorage.getItem('petNumber')
@@ -28,7 +27,6 @@ export default function BattleRightInfo() {
             .then((response) => {
                setPet(response.data)
                localStorage.setItem('petNumber', response.data.petNumber)
-               localStorage.setItem('process', response.data.process)
             })
       } catch (error) {
          console.error(error)

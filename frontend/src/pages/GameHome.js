@@ -7,18 +7,18 @@ import { useEffect } from 'react'
 export default function GameHome() {
    const location = useLocation()
 
-   const compareOnlineDuration = async () => {
-      const loginTime = localStorage.getItem('login')
-      const now = new Date().getTime()
+   // const compareOnlineDuration = async () => {
+   //    const loginTime = localStorage.getItem('login')
+   //    const now = new Date().getTime()
 
-      let onlineDuration = now - loginTime
+   //    let onlineDuration = now - loginTime
 
-      localStorage.setItem('online', onlineDuration)
-   }
+   //    localStorage.setItem('online', onlineDuration)
+   // }
 
-   useEffect(() => {
-      compareOnlineDuration()
-   }, [location])
+   // useEffect(() => {
+   //    compareOnlineDuration()
+   // }, [location])
 
    return (
       <div className="gamehome-container">

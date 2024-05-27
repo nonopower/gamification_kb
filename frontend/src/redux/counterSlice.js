@@ -7,6 +7,8 @@ export const pointSlice = createSlice({
    initialState: 0,
    reducers: {
       setPoint: (state, action) => {
+         const newValue = state + action.payload
+         localStorage.setItem('point', newValue)
          return state + action.payload
       },
    },

@@ -26,7 +26,6 @@ import url from './../url.json'
 import eventBus from '../utils/EventBus'
 
 export const CreateFlask = ({ open, onClose, ws }) => {
-   const experiment = useSelector((state) => state.experiment)
    const dispatch = useDispatch()
 
    const name = localStorage.getItem('name')
@@ -59,7 +58,7 @@ export const CreateFlask = ({ open, onClose, ws }) => {
       })
    }
 
-   const updateRadar = async () => {
+   const updateRadar = async (experiment) => {
       try {
          const data = {
             id: localStorage.getItem('userId'),
@@ -101,7 +100,7 @@ export const CreateFlask = ({ open, onClose, ws }) => {
                console.log(res)
             },
          )
-         await updateRadar()
+         await updateRadar(1)
          window.location.reload(false)
          alert('新增成功')
          onClose(onClose)
