@@ -11,6 +11,7 @@ const Boss = require('./boss.controller');
 const Pet = require('./pet.controller');
 const BackPack = require('./backPack.controller');
 const Notice = require('./notice.controller');
+const Dashboard = require('./dashboard.controller');
 
 
 module.exports = {
@@ -26,5 +27,6 @@ module.exports = {
   Boss,
   Pet,
   BackPack,
-  Notice
+  Notice,
+  Dashboard
 };
