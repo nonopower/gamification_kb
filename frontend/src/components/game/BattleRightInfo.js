@@ -10,6 +10,7 @@ export default function BattleRightInfo() {
    const groupId = localStorage.getItem('groupId')
    const activityId = localStorage.getItem('activityId')
    const userid = localStorage.getItem('userId')
+   const process = localStorage.getItem('process')
 
    const role = localStorage.getItem('role') + '2.gif'
    const petNumber = localStorage.getItem('petNumber')
@@ -27,43 +28,51 @@ export default function BattleRightInfo() {
             .then((response) => {
                setPet(response.data)
                localStorage.setItem('petNumber', response.data.petNumber)
+               localStorage.setItem('process', response.data.process)
             })
       } catch (error) {
          console.error(error)
       }
    }
 
+   const getPetAndBar = async () => {
+      await getPet().then(getExpWidth(pet.process))
+   }
+
+   useEffect(() => {
+      getPetAndBar()
+   }, [])
+
+   // 每一分鐘抓寶一次
+   useEffect(() => {
+      const intervalId = setInterval(getPetAndBar, 1 * 60 * 1000)
+      return () => clearInterval(intervalId)
+   }, [])
+
    // exp 寬度計算
    const bloodBar = useRef(null)
    const totalBar = useRef(null)
 
    const getExpWidth = (process) => {
+      console.log(bloodBar.current.style.width)
       const totalWidth = window.getComputedStyle(totalBar.current).width
       if (!process) return
       const total = 100
       const prop = process / total
-      console.log(prop)
 
       if (process === total) {
          bloodBar.current.style.width = totalWidth + 'px'
       }
       bloodBar.current.style.width = totalWidth.slice(0, -2) * prop + 'px'
-      // eventBus.emit('loading', false)
    }
 
-   useEffect(() => {
-      getPet()
-   }, [])
+   // useEffect(() => {
+   //    if (pet) getExpWidth(pet.process)
+   // }, [pet])
 
-   // 每一分鐘抓寶一次
-   useEffect(() => {
-      const intervalId = setInterval(getPet, 1 * 60 * 1000)
-      return () => clearInterval(intervalId)
-   }, [])
-
-   useEffect(() => {
-      getExpWidth(pet.process)
-   }, [pet])
+   // useEffect(() => {
+   //    console.log(pet)
+   // }, [pet])
 
    const onClickBag = (e) => {
       e.preventDefault()
@@ -81,7 +90,6 @@ export default function BattleRightInfo() {
          console.error(error)
       }
    }
-
    const [groupData, setGroupData] = useState()
 
    const getGroups = async () => {
@@ -124,6 +132,8 @@ export default function BattleRightInfo() {
       }
    }, [team, groupData, groupId])
 
+   console.log(memberData)
+
    return (
       <>
          <div className="battle-right-info">
@@ -152,7 +162,10 @@ export default function BattleRightInfo() {
                            src={`${item.imageContent}1.png`}
                            key={index}
                            style={{
-                              filter: item.state ? 'grayscale(100%)' : 'none',
+                              filter:
+                                 item.state === '0'
+                                    ? 'grayscale(100%)'
+                                    : 'none',
                            }}
                            alt=""
                         />

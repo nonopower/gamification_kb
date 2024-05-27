@@ -18,17 +18,12 @@ export default function Bag() {
    const getGroupBackPack = async () => {
       try {
          await axios
-            .get(`${url.backendHost}api/backPack/getGroupBackPack`, {
-               headers: {
-                  authorization: 'Bearer JWT Token',
-               },
-               body: {
-                  groupId,
-                  activityId,
-               },
+            .post(`${url.backendHost}api/backPack/getGroupBackPack`, {
+               groupId,
+               activityId,
             })
             .then((response) => {
-               setMonsterList(response)
+               setMonsterList(response.data)
             })
       } catch (error) {
          console.error(error)
@@ -64,11 +59,14 @@ export default function Bag() {
                <h1>Backpack</h1>
                <div className="monster-area">
                   {monsterList &&
-                     monsterList.map((item, index) => {
-                        ;<div className="monster-item" key={index}>
-                           <img src={`/game/new_monster/${item}`} alt="" />
+                     monsterList.map((item, index) => (
+                        <div className="monster-item" key={index}>
+                           <img
+                              src={`/game/new_monster/${item.petNumber}`}
+                              alt=""
+                           />
                         </div>
-                     })}
+                     ))}
                </div>
             </div>
             <button onClick={back}>Back</button>
