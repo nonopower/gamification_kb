@@ -19,22 +19,15 @@ import {
    Legend,
 } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
-// import { faker } from 'faker'
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default function Dash() {
-   const groupId = localStorage.getItem('groupId')
-
    const [activeList, setActiveList] = useState()
    const navigate = useNavigate()
    const [active, setActive] = useState('')
 
    const options = {
-      plugins: {
-         title: {
-            display: true,
-            text: 'Chart.js Bar Chart - Stacked',
-         },
-      },
       responsive: true,
       scales: {
          x: {
@@ -46,42 +39,10 @@ export default function Dash() {
       },
    }
 
-   const labels = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-   ]
-
-   const data = {
-      labels,
-      datasets: [
-         // {
-         //    label: 'Dataset 1',
-         //    data: labels.map(() =>
-         //       faker.datatype.number({ min: -1000, max: 1000 }),
-         //    ),
-         //    backgroundColor: 'rgb(255, 99, 132)',
-         // },
-         // {
-         //    label: 'Dataset 2',
-         //    data: labels.map(() =>
-         //       faker.datatype.number({ min: -1000, max: 1000 }),
-         //    ),
-         //    backgroundColor: 'rgb(75, 192, 192)',
-         // },
-         // {
-         //    label: 'Dataset 3',
-         //    data: labels.map(() =>
-         //       faker.datatype.number({ min: -1000, max: 1000 }),
-         //    ),
-         //    backgroundColor: 'rgb(53, 162, 235)',
-         // },
-      ],
-   }
+   const [data, setData] = useState({
+      labels: [],
+      datasets: [],
+   })
 
    const handleChange = (event) => {
       setActive(event.target.value)
@@ -99,6 +60,14 @@ export default function Dash() {
       }
    }
 
+   useEffect(() => {
+      getActiveList()
+   }, [])
+
+   useEffect(() => {
+      if (activeList && activeList.length > 0) setActive(activeList[0].id)
+   }, [activeList])
+
    const [activeData, setActiveData] = useState()
 
    const getActiveData = async () => {
@@ -108,6 +77,7 @@ export default function Dash() {
                activityId: +active,
             })
             .then((response) => {
+               console.log(response.data)
                setActiveData(response.data)
             })
       } catch (error) {
@@ -116,20 +86,51 @@ export default function Dash() {
    }
 
    useEffect(() => {
-      getActiveList()
-   }, [])
-
-   useEffect(() => {
-      if (activeList && activeList.length > 0) setActive(activeList[0].id)
-   }, [activeList])
-
-   useEffect(() => {
       if (active) getActiveData()
    }, [active])
 
+   const updData = async () => {
+      if (activeData) {
+         const ideaData = {
+            label: '想法',
+            data: activeData.map((item) => item.idea),
+            backgroundColor: '#6aa8e4',
+         }
+         const askData = {
+            label: '提問',
+            data: activeData.map((item) => item.question),
+            backgroundColor: '#f8b360',
+         }
+         const infoData = {
+            label: '資訊',
+            data: activeData.map((item) => item.information),
+            backgroundColor: '#3cbbbd',
+         }
+         const experimentData = {
+            label: '實驗',
+            data: activeData.map((item) => item.experiment),
+            backgroundColor: '#a569ee',
+         }
+         const recordData = {
+            label: '紀錄',
+            data: activeData.map((item) => item.record),
+            backgroundColor: '#ff82a5',
+         }
+
+         setData((prevData) => ({
+            labels: activeData.map((item) => item.author),
+            datasets: [recordData, experimentData, infoData, askData, ideaData],
+         }))
+      }
+   }
+
    useEffect(() => {
-      console.log(activeData)
+      updData()
    }, [activeData])
+
+   useEffect(() => {
+      // console.log(data)
+   }, [data])
 
    return (
       <div className="dashboard-container">
@@ -157,8 +158,10 @@ export default function Dash() {
                </Select>
             </FormControl>
          </Box>
-         <Box>
-            <Bar options={options} data={data} />
+         <Box sx={{ width: '70%', marginTop: '20px' }}>
+            {data.datasets.length > 0 && data.labels.length > 0 && (
+               <Bar options={options} data={data} />
+            )}
          </Box>
       </div>
    )

@@ -18,6 +18,7 @@ import Index from './pages/Index'
 import IndexOfTeacher from './pages/teacher/index'
 import Forum from './pages/Forum'
 import Dashboard from './pages/Dashboard'
+import Dash from './pages/dash'
 import PrepareLessons from './pages/teacher/PrepareLessons'
 import { RequireAuth } from 'react-auth-kit'
 import './assets/game/loading.scss'
@@ -69,6 +70,14 @@ export default function App() {
                element={
                   <RequireAuth loginPath="/">
                      <Dashboard />
+                  </RequireAuth>
+               }
+            ></Route>
+            <Route
+               path="/dash"
+               element={
+                  <RequireAuth loginPath="/">
+                     <Dash />
                   </RequireAuth>
                }
             ></Route>
