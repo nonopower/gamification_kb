@@ -33,12 +33,12 @@ export default function Battle() {
          randomSeed: 23,
          improvedLayout: true,
          hierarchical: {
-            enabled: false,
+            enabled: true,
             blockShifting: true,
             edgeMinimization: true,
             nodeSpacing: 150,
             direction: 'RL',
-            sortMethod: 'directed',
+            sortMethod: 'hubsize',
          },
       },
       interaction: {
@@ -266,28 +266,11 @@ export default function Battle() {
          }
          dispatch(setRead(1))
       },
-      dragEnd: (event) => {
-         //console.log(`Graph:dragEnd:events:`,event);
-         const dragNodeId = event.nodes[0]
-         //console.log(`Graph:dragEnd:dragNode`,dragNodeId);
-         if (dragNodeId) {
-            //console.log(`Graph:dragEnd:graph-1`,graph);
-            const nodePositions = event.pointer.DOM
-            //console.log(`Graph:dragEnd:nodePositions`,nodePositions);
-            graph.nodes.forEach((element) => {
-               if (element.id === dragNodeId) {
-                  element.x = nodePositions.x
-                  element.y = nodePositions.y
-               }
-            })
-            //console.log(`Graph:dragEnd:graph-2`,graph);
-         }
-      },
    }
 
-   const fetchGroupData = useCallback(async () => {
-      const enterDifferentGroupEndpoint = `${url.backendHost}${config[16].EnterDifferentGroup}${localStorage.getItem('joinCode')}/${userid}`
-      const getMyGroupEndpoint = `${url.backendHost}${config[12].getMyGroup}/${localStorage.getItem('activityId')}/${userid}`
+   const fetchGroupData = async () => {
+      const enterDifferentGroupEndpoint = `${url.backendHost}${config[16].EnterDifferentGroup}${localStorage.getItem('joinCode')}/${localStorage.getItem('userId')}`
+      const getMyGroupEndpoint = `${url.backendHost}${config[12].getMyGroup}/${localStorage.getItem('activityId')}/${localStorage.getItem('userId')}`
 
       try {
          const response = await axios.get(enterDifferentGroupEndpoint, {
@@ -295,7 +278,10 @@ export default function Battle() {
                authorization: 'Bearer JWT Token',
             },
          })
-         localStorage.setItem('groupId', response.data.data[0].id)
+         // console.log("1. groupData:response ", response.data.data[0].id);
+         const groupId = response.data.data[0].id
+         localStorage.setItem('groupId', groupId)
+         sessionStorage.setItem('groupId', groupId)
       } catch (error) {
          try {
             const response = await axios.get(getMyGroupEndpoint, {
@@ -303,17 +289,20 @@ export default function Battle() {
                   authorization: 'Bearer JWT Token',
                },
             })
-            localStorage.setItem('groupId', response.data.data[0].id)
+            // console.log("1. groupData:response ", response.data.data[0].id);
+            const groupId = response.data.data[0].id
+            localStorage.setItem('groupId', groupId)
+            sessionStorage.setItem('groupId', groupId)
          } catch (error) {
-            console.error(error)
+            console.error('Error fetching group data', error)
          }
       } finally {
          await getNodes()
       }
-   }, [])
+   }
 
-   const getNodes = useCallback(async () => {
-      if (localStorage.getItem('groupId') == null) {
+   const getNodes = async () => {
+      if (sessionStorage.getItem('groupId') == null) {
          const asyncFn = async () => {
             await fetchGroupData()
          }
@@ -322,7 +311,7 @@ export default function Battle() {
       }
 
       const fetchData = await axios.get(
-         `${url.backendHost + config[8].getNode}/${localStorage.getItem('groupId')}`,
+         `${url.backendHost + config[8].getNode}/${sessionStorage.getItem('groupId')}`,
          {
             headers: {
                authorization: 'Bearer JWT Token',
@@ -331,7 +320,7 @@ export default function Battle() {
       )
 
       const fetchEdge = await axios.get(
-         `${url.backendHost + config[10].getEdge}/${localStorage.getItem('groupId')}`,
+         `${url.backendHost + config[10].getEdge}/${sessionStorage.getItem('groupId')}`,
          {
             headers: {
                authorization: 'Bearer JWT Token',
@@ -339,16 +328,21 @@ export default function Battle() {
          },
       )
 
+      console.log('fetchData: ', fetchData)
+      // console.log("fetchEdge: ", fetchEdge);
+
       const nodeData = fetchData.data[0].Nodes.map((node) => genNode(node))
 
       const edgeData = fetchEdge.data.map((edge) => genEdge(edge))
 
-      localStorage.setItem('nodeDataLength', nodeData.length + 1)
+      console.log('nodeData: ', nodeData)
+      console.log('edgeData: ', edgeData)
+      sessionStorage.setItem('nodeDataLength', nodeData.length + 1)
       setGraph({
          nodes: nodeData,
          edges: edgeData,
       })
-   }, [fetchGroupData])
+   }
 
    const handleClickOpen = (nodeId) => {
       setNodeContent(null)
@@ -356,17 +350,17 @@ export default function Battle() {
       fetchNodeData(nodeId)
    }
 
-   const fetchNodeData = useCallback(async (nodeId) => {
+   const fetchNodeData = async (nodeId) => {
       try {
          const response = await axios.get(
             `${url.backendHost + config[11].getOneNode}/${nodeId}`,
          )
-         // console.log(response.data)
          setNodeContent(response.data)
+         // console.log('Node Content: ', response.data);
       } catch (err) {
-         console.error(err)
+         // console.log(err);
       }
-   }, [])
+   }
 
    const handleClose = () => {
       setOpen(false)
@@ -378,7 +372,7 @@ export default function Battle() {
          setSocket(io.connect(url.socketioHost))
       }
       fetchData()
-   }, [fetchGroupData, fetchNodeData])
+   }, [])
 
    const [openBag, setOpenBag] = useState(false)
 
@@ -440,7 +434,6 @@ export default function Battle() {
             nodeContent={nodeContent}
             ws={ws}
          />
-         {/* <Bag /> */}
          {openBag ? <Bag /> : <></>}
       </>
    )
