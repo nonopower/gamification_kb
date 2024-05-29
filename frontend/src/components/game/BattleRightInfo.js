@@ -4,7 +4,7 @@ import axios from 'axios'
 import url from '../../url.json'
 import config from '../../config.json'
 
-export default function BattleRightInfo() {
+export default function BattleRightInfo(pet) {
    // eventBus.emit('loading', true)
 
    const groupId = localStorage.getItem('groupId')
@@ -13,35 +13,6 @@ export default function BattleRightInfo() {
 
    const role = localStorage.getItem('role') + '2.gif'
    const petNumber = localStorage.getItem('petNumber')
-
-   // 取得目前抓的
-   const [pet, setPet] = useState({})
-
-   const getPet = async () => {
-      try {
-         const response = await axios
-            .post(`${url.backendHost}api/pet/getCurrentPet`, {
-               groupId,
-               activityId,
-            })
-            .then((response) => {
-               setPet(response.data)
-               localStorage.setItem('petNumber', response.data.petNumber)
-            })
-      } catch (error) {
-         console.error(error)
-      }
-   }
-
-   useEffect(() => {
-      getPet()
-   }, [])
-
-   // 每一分鐘抓寶一次
-   useEffect(() => {
-      const intervalId = setInterval(getPet, 1 * 60 * 1000)
-      return () => clearInterval(intervalId)
-   }, [])
 
    // exp 寬度計算
    const bloodBar = useRef(null)
@@ -68,10 +39,10 @@ export default function BattleRightInfo() {
          if (
             totalBar.current &&
             totalBar.current.offsetWidth > 0 &&
-            pet.process
+            pet.pet.process
          ) {
             const width = window.getComputedStyle(totalBar.current).width
-            getExpWidth(pet.process)
+            getExpWidth(pet.pet.process)
          }
       })
 
@@ -153,13 +124,20 @@ export default function BattleRightInfo() {
       }
    }, [team, groupData, groupId])
 
+   useEffect(() => {
+      console.log(pet.pet)
+   }, [pet])
+
    return (
       <>
          <div className="battle-right-info">
             <div className="monster-container">
                <div className="img-container">
                   <div className="monster">
-                     <img src={`/game/new_monster/${pet.petNumber}`} alt="" />
+                     <img
+                        src={`/game/new_monster/${pet.pet.petNumber}`}
+                        alt=""
+                     />
                   </div>
                </div>
                <div className="bar-container">
