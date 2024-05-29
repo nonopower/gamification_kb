@@ -78,6 +78,11 @@ export default function User() {
             suggestedMax: 10,
          },
       },
+      plugins: {
+         legend: {
+            display: false,
+         },
+      },
    }
 
    const getRadar = async () => {
