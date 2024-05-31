@@ -134,34 +134,36 @@ export default function Dash() {
 
    return (
       <div className="dashboard-container">
-         <Box mb={2}>
-            <Button
-               size="large"
-               sx={{ fontSize: '40px' }}
-               onClick={() => navigate(-1)}
-            >
-               返回
-            </Button>
-         </Box>
          <Box>
-            <FormControl sx={{ width: '300px' }}>
-               <Select value={active} onChange={handleChange}>
-                  {activeList && activeList.length > 0 ? (
-                     activeList.map((item) => (
-                        <MenuItem key={item.id} value={item.id}>
-                           {item.title}
-                        </MenuItem>
-                     ))
-                  ) : (
-                     <MenuItem disabled>無資料</MenuItem>
-                  )}
-               </Select>
-            </FormControl>
-         </Box>
-         <Box sx={{ width: '70%', marginTop: '20px' }}>
-            {data.datasets.length > 0 && data.labels.length > 0 && (
-               <Bar options={options} data={data} />
-            )}
+            <Box mb={2}>
+               <Button
+                  size="large"
+                  sx={{ fontSize: '40px' }}
+                  onClick={() => navigate(-1)}
+               >
+                  返回
+               </Button>
+            </Box>
+            <Box>
+               <FormControl sx={{ width: '300px' }}>
+                  <Select value={active} onChange={handleChange}>
+                     {activeList && activeList.length > 0 ? (
+                        activeList.map((item) => (
+                           <MenuItem key={item.id} value={item.id}>
+                              {item.title}
+                           </MenuItem>
+                        ))
+                     ) : (
+                        <MenuItem disabled>無資料</MenuItem>
+                     )}
+                  </Select>
+               </FormControl>
+            </Box>
+            <Box sx={{ width: '70%', marginTop: '20px' }}>
+               {data.datasets.length > 0 && data.labels.length > 0 && (
+                  <Bar options={options} data={data} />
+               )}
+            </Box>
          </Box>
       </div>
    )
