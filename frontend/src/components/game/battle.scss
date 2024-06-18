@@ -1,6 +1,6 @@
 .battle-container {
-   width: 100%;
-   height: 100%;
+   width: 100vw;
+   height: 100vh;
    display: flex;
    position: relative;
    background-image: url('../../assets/game/blur_bg.jpg');
@@ -9,9 +9,8 @@
 
    .side-menu {
       width: 10%;
-      height: 100vh;
+      height: 100%;
       padding: 20px;
-      overflow: hidden;
       position: absolute;
       z-index: 1;
 

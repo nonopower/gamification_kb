@@ -30,24 +30,6 @@ export default function Bag() {
       }
    }
 
-   // 要在別頁呼叫
-
-   const addGroupPet = async () => {
-      try {
-         const response = await axios
-            .post(`${url.backendHost}api/pet/insertPet`, {
-               groupId,
-               activityId,
-               petNumber: '',
-            })
-            .then((response) => {
-               console.log(response)
-            })
-      } catch (error) {
-         console.error(error)
-      }
-   }
-
    useEffect(() => {
       getGroupBackPack()
    }, [])
