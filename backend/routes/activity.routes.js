@@ -15,6 +15,9 @@ module.exports = app => {
     
     // Get user's all activity.
     router.get('/myActivity/:userId', activities.findMyActivity);
+    
+    // Get user's all activity.
+    router.get('/allActivity', activities.findAllActivity);
 
     // Get user's one activity.
     router.get('/:id', activities.findOneActivity);

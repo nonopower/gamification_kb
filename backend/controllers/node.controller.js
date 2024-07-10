@@ -28,6 +28,28 @@ exports.create = async (req, res) => {
             message: 'Node created successfully',
             node: node
         });
+
+        const upd = `update "Pets" set "process" = "process" + 1 where "groupId" = `+ groupId ;//更新pet進度
+        await db.sequelize.query(upd, { type: db.sequelize.QueryTypes.UPDATE });
+
+        const query = `select * from "Pets" where "groupId" = `+ groupId;//查詢目前pet進度
+        const upddata = await db.sequelize.query(query, { type: db.sequelize.QueryTypes.SELECT });
+
+        if (upddata[0]) {
+            if (Number(upddata[0].process) >= 100) {//如果進度超過100
+                const activityId = upddata[0].activityId;
+                const numStr = upddata[0].petNumber.substring(3, 5);
+                const num = parseInt(numStr, 10) + 1;
+                const newNumStr = 'pet'+ num.toString().padStart(2, '0') + '.gif';
+                const updPet = `update "Pets" set "process" = 0, "petNumber" = '`+ newNumStr + `' where "groupId" = `+ groupId;
+                await db.sequelize.query(updPet, { type: db.sequelize.QueryTypes.UPDATE });
+                
+                const insBackPacks = `insert into "BackPacks" 
+                ("groupId", "activityId", "petNumber", "conquerTime", "createdAt", "updatedAt") 
+                  values( ` + groupId + `, ` + activityId + `, '` + upddata[0].petNumber +`', current_timestamp AT TIME ZONE 'Asia/Taipei', current_timestamp AT TIME ZONE 'Asia/Taipei', current_timestamp AT TIME ZONE 'Asia/Taipei');`;
+                await db.sequelize.query(insBackPacks, { type: db.sequelize.QueryTypes.INSERT });
+            }
+        }
     } catch (err) {
         // console.log('Error while creating node:', err);
         res.status(500).send({

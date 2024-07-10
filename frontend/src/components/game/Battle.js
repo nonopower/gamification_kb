@@ -369,7 +369,7 @@ export default function Battle() {
    useEffect(() => {
       async function fetchData() {
          await fetchGroupData()
-         setSocket(io.connect(url.socketioHost))
+         setSocket(io.connect('http://111.184.127.25:56001'))
       }
       fetchData()
    }, [])

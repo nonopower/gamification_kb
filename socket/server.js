@@ -1,13 +1,27 @@
 const _ = require("lodash");
 const express = require('express');
+const cors = require('cors');
+const axios = require('axios');
 const app = express();
-const port = 56000; // define your port
+const port = 56000;
+app.use(cors({
+  origin: 'http://111.184.127.25:56001', // 允许的客户端地址
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+  credentials: true
+}));
+
 const server = app.listen(port, () => {
   console.log(`We are Listening on port ${port}...`);
 });
 
 const io = require('socket.io')(server, {
-    path: "/pathToConnection"
+  path: "/pathToConnection",
+  cors: {
+    origin: 'http://111.184.127.25:56001', // 允许的客户端地址
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
 });
 let users = {};
 io.on('connection', (socket) => {
@@ -35,7 +49,6 @@ io.on('connection', (socket) => {
 
   // 更新用戶狀態的函式
   function updateUserState(userId, state) {
-    const axios = require('axios');
     axios.post('http://111.184.127.25:8000/api/users/updateUserState', {
       id: userId,
       state: state

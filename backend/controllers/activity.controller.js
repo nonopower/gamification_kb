@@ -133,6 +133,19 @@ exports.findMyActivity = (req, res) => {
         });
 };
 
+// Find all activity by userId(owner).
+exports.findAllActivity = async (req, res) => {
+    try {
+        const query = `SELECT "id", "title" FROM "Activities"`;
+        const data = await db.sequelize.query(query, { type: db.sequelize.QueryTypes.SELECT });
+    
+        res.send(data);
+      } catch (error) {
+        res.status(500).json(error);
+      }
+};
+
+
 // Find a single activity with an id.
 exports.findOneActivity = (req, res) => {
     const id = req.params.id;
